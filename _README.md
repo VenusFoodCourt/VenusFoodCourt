@@ -1,13 +1,12 @@
-# Project Name
+# FOODCOURT (while pronouncing, make sure to yell 'ALL CAPS' at the end)
 
-> Pithy project description
+> App to display photos of food for other to judge and comment on. 
 
 ## Team
 
-  - teamMember
-  - teamMember
-  - teamMember
-  - teamMember
+  - Brendon Verch
+  - Johnny Chen
+  - Muhammad Rashid
 
 ## Table of Contents
 
@@ -21,15 +20,19 @@
 
 ## Usage
 
-> Some usage instructions
+> Click a button to add a new photo. Click the photo/food post to go the food post review. Enter a comment in comment box to comment on individual food 
+> item/post.
 
 ## Requirements
 
-- Node 6.4.x
-- Redis 2.6.x
-- Postgresql 9.1.x
-- etc
-- etc
+- React "^16.1.0"
+- Express "^4.16.2"
+- MySQL
+- Sequelize 
+- JQuery
+- AWS S3
+- Passport 
+
 
 ## Development
 
@@ -38,14 +41,12 @@
 From within the root directory:
 
 ```sh
-npm install -g bower
-npm install
-bower install
+npm install 
 ```
 
 ### Roadmap
 
-View the project roadmap [here](LINK_TO_DOC)
+View the project roadmap [here](https://docs.google.com/document/d/1swH8dthjKDcLO8M-GUg7dM2PJmpiL1EzM1gW7Iilbhc/edit)
 
 
 ## Contributing
