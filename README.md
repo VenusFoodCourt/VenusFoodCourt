@@ -1,6 +1,6 @@
 # FOODCOURT (while pronouncing, make sure to yell 'ALL CAPS' at the end)
 
-> App to display photos of food for other to judge and comment on. 
+> App to display photos of food for other to judge and comment on.
 
 ## Team
 
@@ -20,7 +20,7 @@
 
 ## Usage
 
-> Click a button to add a new photo. Click the photo/food post to go the food post review. Enter a comment in comment box to comment on individual food 
+> Click a button to add a new photo. Click the photo/food post to go the food post review. Enter a comment in comment box to comment on individual food
 > item/post.
 
 ## Requirements
@@ -28,10 +28,10 @@
 - React "^16.1.0"
 - Express "^4.16.2"
 - MySQL
-- Sequelize 
+- Sequelize
 - JQuery
 - AWS S3
-- Passport 
+- Passport
 
 
 ## Development
@@ -41,8 +41,15 @@
 From within the root directory:
 
 ```sh
-npm install 
+npm install
 ```
+### Setting up Development Environment
+
+Run the express server with this command:
+```sh
+npm run server-dev
+```
+Go to your favorite browser and go to http://localhost:3000
 
 ### Roadmap
 
