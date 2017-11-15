@@ -9,6 +9,7 @@ var port = 3000;
 app.listen(3000);
 
 // middleware
-app.use(express.static(path.join(__dirname, '../client/dist'))); // add static directory to serve files
+
+app.use(express.static(path.join(__dirname, '../client/src'))); // add static directory to serve files
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
