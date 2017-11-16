@@ -1,0 +1,18 @@
+{
+  "name": "VenusFoodCourt",
+  "description": "Staging app.json",
+  "scripts": {
+  },
+  "env": {
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
