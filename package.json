@@ -5,8 +5,10 @@
   "author": "",
   "license": "",
   "engines": {
-    "node": ">=6.4.0"
+    "node": "8.9.1",
+    "npm": "5.5.1"
   },
+  "main": "./server/index.js",
   "scripts": {
     "server-dev": "nodemon ./server/index.js",
     "react-dev": "webpack -d --watch"
