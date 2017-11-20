@@ -1,0 +1,48 @@
+body {
+  background-color: lightblue;
+  font-family: serif;
+  color: #2d2c3d;
+}
+
+.modal {
+  background-color: lightblue;
+  font-family: serif;
+  color: #2d2c3d;
+  margin: auto;
+  width: 50%;
+}
+
+.flex {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+}
+
+.image-item {
+  display: flex;
+  padding-top: 20px;
+}
+
+.flex-item {
+  width: 400;
+  height: 120;
+  padding-left: 10px;
+  margin: 0px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+.title {
+  margin: 0px;
+  font-weight: bold;
+}
+.description {
+
+}
+.username {
+  padding: 0;
+  margin-bottom: auto;
+  font-style: italic;
+}

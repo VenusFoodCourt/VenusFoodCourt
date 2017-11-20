@@ -2,15 +2,18 @@ import React from 'react';
 import FoodPostListEntry from './foodPostListEntry.jsx';
 
 class FoodPostList extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log(props);
+  }
   render () {
     return (
-      <div style={{borderStyle: 'solid'}}>
-        <h2>This is where the foodPostList goes</h2>
-        <FoodPostListEntry />
-        <FoodPostListEntry />
-        <FoodPostListEntry />
-        <FoodPostListEntry />
-        <FoodPostListEntry />
+      <div>
+        <div>
+          {this.props.foodPosts.map((foodPost, index)=>{
+            return <FoodPostListEntry key={index} foodPost={foodPost}/>
+          })}
+        </div>
       </div>
     );
   }
