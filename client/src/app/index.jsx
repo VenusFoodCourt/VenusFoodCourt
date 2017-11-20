@@ -3,6 +3,7 @@ import {render} from 'react-dom';
 import Header from './components/header.jsx';
 import FoodPostList from './components/foodPostList.jsx';
 import SingleFoodItem from './components/singleFoodItem.jsx';
+import { BrowserRouter, Link, Route } from 'react-router-dom';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,11 +17,24 @@ class App extends React.Component {
   render () {
     return (
       <div style={{borderStyle: 'solid'}}>
+        <nav>
+          <Link to="/">Main Page</Link>
+          <Link to="/post">Post Page</Link>
+        </nav>
         <Header />
-        <FoodPostList foodPosts={this.state.foodPosts} />
+        <div>
+          <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} /> )}/>
+        </div>
+        <div>
+          <Route exact path="/post" render={(props) => ( <SingleFoodItem foodPost={this.state.foodPosts[0]} /> )}/>
+        </div>
       </div>
       );
   }
 }
 
-render(<App/>, document.getElementById('app'));
+render((
+  <BrowserRouter>
+    <App/>
+  </BrowserRouter>
+  ), document.getElementById('app'));

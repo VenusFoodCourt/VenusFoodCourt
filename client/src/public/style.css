@@ -19,9 +19,24 @@ body {
   display: flex;
 }
 
+.flex-post {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
 .image-item {
   display: flex;
   padding-top: 20px;
+}
+
+.image-post {
+  display: flex;
+  padding-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .flex-item {

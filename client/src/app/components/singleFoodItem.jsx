@@ -4,10 +4,14 @@ import Comments from './comments.jsx';
 class SingleFoodItem extends React.Component {
   render () {
     return (
-        <div style={{borderStyle: 'solid'}}>
-          <h1>This is where the SingleFoodItem goes</h1>
-          <Comments />
+      <div className="flex-post">
+        <img className="image-post" height="240" width="400" src={this.props.foodPost.url} />
+        <div className="flex-item">
+          <p className="title">{this.props.foodPost.title}</p>
+          <p className="description">{this.props.foodPost.description}</p>
+          <p className="username">{this.props.foodPost.username}</p>
         </div>
+      </div>
       );
   }
 }
