@@ -23,6 +23,14 @@ class Header extends React.Component {
 
     imageFormData.append('imageFile', this.state.file);
 
+    // {this.state.file, this.state.title}
+
+    $.ajax({
+      type: 'POST',
+      url: '/foodPost',
+      data: imageFormData
+    });
+
     console.log(imageFormData);
 
     console.log(imageFormData.get('imageFile'));
