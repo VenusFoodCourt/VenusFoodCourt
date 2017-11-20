@@ -53,6 +53,13 @@ body {
   margin: 0px;
   font-weight: bold;
 }
+
+.post-title {
+  margin: 0px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
 .description {
 
 }
@@ -60,4 +67,8 @@ body {
   padding: 0;
   margin-bottom: auto;
   font-style: italic;
+}
+
+.comment-text {
+  margin-left: 2em;
 }

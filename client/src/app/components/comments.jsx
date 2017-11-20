@@ -1,13 +1,10 @@
 import React from 'react';
 
-class Comments extends React.Component {
-  render () {
-    return (
-        <div style={{borderStyle: 'solid'}}>
-          <h1>This is where the Comments go</h1>
-        </div>
-      );
-  }
-}
+const Comments = (props) => (
+  <div style={{borderStyle: 'solid'}}>
+    <p>{props.comment.username}</p>
+    <p className='comment-text'>{props.comment.text}</p>
+  </div>
+);
 
 export default Comments;
