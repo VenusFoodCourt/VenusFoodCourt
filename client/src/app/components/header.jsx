@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+import $ from 'jquery';
 
 class Header extends React.Component {
 
@@ -9,7 +10,7 @@ class Header extends React.Component {
       modalOpen: false,
       file: undefined,
       imgPath: ''
-    }
+    };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleImgUpload = this.handleImgUpload.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
@@ -17,33 +18,41 @@ class Header extends React.Component {
 
   handleImgUpload(e) {
     e.preventDefault();
-    console.log('handleImgUpload');
-    console.log(this.state.file);
-    let imageFormData = new FormData();
+    console.log('inside handleImgUpload!');
+    console.log('this.state.file: ', this.state.file);
+    var formData = {
+      'username': 'Johnny',
+      'title': 'My food post',
+      'description': 'My food is so delicious',
+      'imageFile': this.state.file
+    };
+    var formData = new FormData();
 
-    imageFormData.append('imageFile', this.state.file);
+    formData.append('username', 'Johnny');
+    formData.append('title', 'My food post');
+    formData.append('description', 'My food is so delicious');
+    formData.append('imageFile', this.state.file);
 
-    // {this.state.file, this.state.title}
+    console.log('formData: ', formData.get('username'));
 
     $.ajax({
       type: 'POST',
       url: '/foodPost',
-      data: imageFormData
+      data: formData,
+      processData: false
+    }).then(() => {
+      console.log('Food post POSTED succesfully');
+    }).catch((error) => {
+      console.error(error);
     });
 
-    console.log(imageFormData);
 
-    console.log(imageFormData.get('imageFile'));
   }
 
   handleImgChange(e) {
     e.preventDefault();
-    console.log(e.target);
-    let formData = new FormData(e.target);
-    console.log(formData);
-    for (let [key, val] of formData.entries()) {
-      console.log(key, val);
-    }
+    console.log('handleImgChange e.target ', e.target);
+
     let reader = new FileReader();
     let file = e.target.files[0];
     reader.onloadend = () => {
@@ -51,9 +60,9 @@ class Header extends React.Component {
         file: file,
         imgPath: reader.result
       });
-    }
+    };
     reader.readAsDataURL(file);
-    console.log(e.target.files[0]);
+    console.log('handleImgChange e.target.files[0], ', e.target.files[0]);
     // this.setState({imgPath: './public' + e.target.value});
   }
 

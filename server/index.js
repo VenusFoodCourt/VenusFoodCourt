@@ -25,6 +25,12 @@ app.get('/foodPosts', function(req, res) {
   //  response expects an array of foodPost objects from the database
 });
 
+app.get('/foodPost/:id', function(req, res) {
+  // endpoint to get single foodPost from db to display on the front page
+  res.statusCode = 200;
+
+});
+
 app.get('/comments', function(req, res) {
   // endpoint to retrieve comments for individual food post page
   res.statusCode = 200;
@@ -33,7 +39,13 @@ app.get('/comments', function(req, res) {
 
 app.post('/foodPost', function(req, res) {
   // endpoint to post an individual food post
-  
+  console.log('inside /foodPost');
+  res.send('inside /foodPost');
+// needs a userID
+// needs a title
+// needs a description
+// needs an image
+
 });
 
 app.post('/comment', function(req, res) {

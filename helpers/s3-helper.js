@@ -20,9 +20,9 @@ var s3 = new AWS.S3({
   params: {Bucket: albumBucketName}
 });
 
-var saveImage = function(file) {
+var saveImage = function(fileObj) {
 
-  var fileKey = 'dev' + '//' + file.name;
+  var fileKey = 'dev' + '//' + fileObj.name;
   s3.upload({
     Key: fileKey,
     Body: file,
