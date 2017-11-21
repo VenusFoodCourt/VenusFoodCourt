@@ -33,6 +33,7 @@ app.get('/comments', function(req, res) {
 
 app.post('/foodPost', function(req, res) {
   // endpoint to post an individual food post
+  
 });
 
 app.post('/comment', function(req, res) {
