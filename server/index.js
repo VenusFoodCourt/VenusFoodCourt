@@ -1,6 +1,11 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
+var formidable = require('formidable');
+var fs = require('fs');
+
+var s3Helper = require('../helpers/s3-helper.js');
+
 
 var app = express();
 
@@ -25,6 +30,12 @@ app.get('/foodPosts', function(req, res) {
   //  response expects an array of foodPost objects from the database
 });
 
+app.get('/foodPost/:id', function(req, res) {
+  // endpoint to get single foodPost from db to display on the front page
+  res.statusCode = 200;
+
+});
+
 app.get('/comments', function(req, res) {
   // endpoint to retrieve comments for individual food post page
   res.statusCode = 200;
@@ -33,6 +44,48 @@ app.get('/comments', function(req, res) {
 
 app.post('/foodPost', function(req, res) {
   // endpoint to post an individual food post
+  console.log('inside /foodPost');
+  var form = new formidable.IncomingForm();
+  var files = {};
+  var fields = {};
+  form.encoding = 'utf-8';
+  form.uploadDir = path.join(__dirname, '../temp/uploads');
+  form.keepExtensions = true;
+
+  form
+    .on('field', function(field, value) {
+      fields[field] = value;
+    })
+    .on('file', function(field, file) {
+      files[field] = file;
+
+    })
+    .on('end', function() {
+      console.log('~> upload done');
+      console.log('files: ', files);
+      console.log('files.imageFile: ', files.imageFile);
+      console.log('files.imageFile.path: ', files.imageFile.path);
+      console.log('files.imageFile.filename: ', files.imageFile.filename);
+      console.log('files.imageFile.name: ', files.imageFile.name);
+      var newFileName = path.basename(files.imageFile.path);
+      var contentType = files.imageFile.type;
+      fs.readFile(files.imageFile.path, function(err, imgFileData) {
+        // console.log(imgFileData);
+
+        s3Helper.saveImage(imgFileData, newFileName, contentType);
+        res.send('file uploaded');
+      });
+
+      // s3Helper.saveImage(files.imageFile);
+    });
+
+  form.parse(req);
+
+// needs a userID
+// needs a title
+// needs a description
+// needs an image
+
 });
 
 app.post('/comment', function(req, res) {

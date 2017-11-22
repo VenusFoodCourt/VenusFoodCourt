@@ -1,3 +1,11 @@
+.DS_Store
+
+# config folder with api keys
+config/*
+
+# temp folder
+temp/*
+
 ### node etc ###
 
 # Logs
