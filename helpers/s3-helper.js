@@ -4,33 +4,35 @@ This file takes data from /foodPost POST endpoint and uploads to s3. Upon upload
 
 var AWS = require('aws-sdk');
 
-const albumBucketName = 'venusfoodcourt';
+const AWS_KEY = require('../config/AWS.js');
+
+const bucketName = 'venusfoodcourt';
 const bucketRegion = 'us-west-1';
-const IdentityPoolId = 'us-east-1:ab20b55d-9f73-4839-a722-5697d7348f5a';
+
 
 AWS.config.update({
-  region: bucketRegion,
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: IdentityPoolId
-  })
+  accessKeyId: AWS_KEY.ACCESS_KEY_ID,
+  secretAccessKey: AWS_KEY.SECRET_ACCESS_KEY
 });
 
 var s3 = new AWS.S3({
-  apiVersion: '2006-03-01',
-  params: {Bucket: albumBucketName}
+  // apiVersion: '2006-03-01',
+  params: {Bucket: bucketName}
 });
 
-var saveImage = function(fileObj) {
+var saveImage = function(fileObj, fileName, contentType) {
 
-  var fileKey = 'dev' + '//' + fileObj.name;
+  var fileKey = 'dev' + '/' + fileName;
   s3.upload({
     Key: fileKey,
-    Body: file,
-    ACL: 'public-read'
+    Body: fileObj,
+    ContentType: contentType
   }, function(err, data) {
     if (err) {
-      return console.log('There was an errior uploading your photo: ', err.message);
+      return console.log('There was an errior uploading your image: ', err.message);
     }
-    console.log('Successfully uploaded photo!');
+    console.log('Successfully uploaded image!');
   });
 };
+
+module.exports.saveImage = saveImage;

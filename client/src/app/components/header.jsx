@@ -33,15 +33,16 @@ class Header extends React.Component {
     formData.append('description', 'My food is so delicious');
     formData.append('imageFile', this.state.file);
 
-    console.log('formData: ', formData.get('username'));
+    console.log('formData.get("imageFile"): ', formData.get('imageFile'));
 
     $.ajax({
       type: 'POST',
       url: '/foodPost',
       data: formData,
-      processData: false
-    }).then(() => {
-      console.log('Food post POSTED succesfully');
+      processData: false,
+      contentType: false
+    }).then((msg) => {
+      console.log('Food post POSTED succesfully: response msg: ', msg);
     }).catch((error) => {
       console.error(error);
     });
