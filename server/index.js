@@ -6,6 +6,8 @@ var fs = require('fs');
 
 var s3Helper = require('../helpers/s3-helper.js');
 
+var db = require('../database/helper.js');
+
 
 var app = express();
 
