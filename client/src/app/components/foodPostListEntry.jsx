@@ -1,4 +1,6 @@
 import React from 'react';
+import SingleFoodItem from './SingleFoodItem.jsx';
+import { BrowserRouter, Link, Route } from 'react-router-dom';
 
 class FoodPostListEntry extends React.Component {
   constructor(props) {
@@ -7,7 +9,9 @@ class FoodPostListEntry extends React.Component {
   render () {
     return (
       <div className="flex">
-        <img className="image-item" height="120" width="150" src={this.props.foodPost.url} />
+        <Link to={"/post" + this.props.foodPost.id}>
+          <img className="image-item" height="120" width="150" src={this.props.foodPost.url} />
+        </Link>
         <div className="flex-item">
           <p className="title">{this.props.foodPost.title}</p>
           <p className="description">{this.props.foodPost.description}</p>

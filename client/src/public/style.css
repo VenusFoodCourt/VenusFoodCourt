@@ -9,7 +9,42 @@ body {
   font-family: serif;
   color: #2d2c3d;
   margin: auto;
-  width: 50%;
+  width: 80%;
+}
+
+.page-title {
+  color: black;
+  text-decoration: none;
+}
+
+#previewing {
+  display: flex;
+  width: 200;
+  height: 120;
+  border-style: solid;
+}
+
+#uploadimage {
+  display: flex;
+}
+
+#new-post {
+  margin-left: 20;
+}
+
+.new-post-item {
+  margin: 0;
+}
+
+.header {
+  background-color: lightblue;
+}
+
+.header-link {
+  color: #0000EE;
+  text-decoration: underline;
+  padding-right: 10px;
+  cursor: pointer;
 }
 
 .flex {
@@ -53,6 +88,13 @@ body {
   margin: 0px;
   font-weight: bold;
 }
+
+.post-title {
+  margin: 0px;
+  font-weight: bold;
+  font-size: 30px;
+}
+
 .description {
 
 }
@@ -60,4 +102,8 @@ body {
   padding: 0;
   margin-bottom: auto;
   font-style: italic;
+}
+
+.comment-text {
+  margin-left: 2em;
 }

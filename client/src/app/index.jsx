@@ -9,24 +9,23 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      foodPosts: [{title: 'DummyTitle', description: 'This is a dummy description. Should maybe have a limit on the number of characters allowed.', url: 'http://placecorgi.com/260/180', username: 'Dummyuser'}, {title: 'DummyTitle', description: 'This is a dummy description. Should maybe have a limit on the number of characters allowed.', url: 'http://placecorgi.com/260/180', username: 'Dummyuser'}]
+      foodPosts: [{id: 234, title: 'DummyTitle1', description: 'This is a dummy description. Should maybe have a limit on the number of characters allowed.', url: 'http://placecorgi.com/260/180', username: 'Dummyuser'}, {id: 123, title: 'DummyTitle2', description: 'This is a dummy description. Should maybe have a limit on the number of characters allowed.', url: 'http://placecorgi.com/260/180', username: 'Dummyuser'}]
     }
   }
 
 
   render () {
     return (
-      <div style={{borderStyle: 'solid'}}>
-        <nav>
-          <Link to="/">Main Page</Link>
-          <Link to="/post">Post Page</Link>
-        </nav>
+      <div>
+        <Link to="/" className="page-title"><h1 >FOODCOURT</h1></Link>
         <Header />
         <div>
           <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} /> )}/>
         </div>
         <div>
-          <Route exact path="/post" render={(props) => ( <SingleFoodItem foodPost={this.state.foodPosts[0]} /> )}/>
+          {this.state.foodPosts.map((foodPost, index)=>{
+            return <Route key={index} exact path={"/post" + foodPost.id} render={(props) => ( <SingleFoodItem foodPost={foodPost} /> )}/>
+          })}
         </div>
       </div>
       );
