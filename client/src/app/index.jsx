@@ -16,10 +16,8 @@ class App extends React.Component {
 
   render () {
     return (
-      <div style={{borderStyle: 'solid'}}>
-        <nav>
-          <Link to="/"><button type="button">Main Page</button></Link>
-        </nav>
+      <div>
+        <Link to="/" className="page-title"><h1 >FOODCOURT</h1></Link>
         <Header />
         <div>
           <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} /> )}/>
