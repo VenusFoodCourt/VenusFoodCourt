@@ -110,22 +110,6 @@ var userIdAssignerByGivenUsername = function (username) {
 
 //********************************************************************************************//
 
-var foodPostIdAssignerByUserId = function (userId) {
-  return FoodPost.findOne({
-    where: {
-      userId: userId
-    }
-  })
-  .then(function(wholeRow) {
-    console.log('foodpost id is ', wholeRow.id);
-    return wholeRow.id;
-  })
-  .catch(function(err) {
-    console.log('following error has occured while retrieving foodPostId', err)
-  })
-}
-
-
 var insertInTo = function (tableName, obj) {
 if (tableName === 'Users') {
   db.sync()
