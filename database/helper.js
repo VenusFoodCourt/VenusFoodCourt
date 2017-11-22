@@ -31,29 +31,29 @@ db.authenticate()
 
 var Users = db.define('users', {
   id: {
-    type: Sequelize.INTEGER, 
-    primaryKey: true, 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   userName: {
-    type: Sequelize.STRING, 
+    type: Sequelize.STRING,
     unique: true
   }
 });
 
 var FoodPost = db.define('foodPost', {
   id: {
-    type: Sequelize.INTEGER, 
-    primaryKey: true, 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   title: {
-    type: Sequelize.STRING, 
+    type: Sequelize.STRING,
     unique: true
-  }, 
+  },
   description : {
     type: Sequelize.TEXT
-  }, 
+  },
   url: {
     type: Sequelize.STRING
   }
@@ -63,10 +63,10 @@ FoodPost.belongsTo(Users);
 
 var Comments = db.define('comments', {
   id: {
-    type: Sequelize.INTEGER, 
-    primaryKey: true, 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   text: {
     type: Sequelize.STRING(800),
     unique: true
@@ -80,7 +80,7 @@ var Votes = db.define('votes', {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   voteValue: {
     type: Sequelize.INTEGER
   }
@@ -119,7 +119,7 @@ var foodPostIdAssignerByUserId = function (userId) {
   .catch(function(err) {
     console.log('following error has occured while retrieving foodPostId', err)
   })
-} 
+}
 
  var insertInTo = function (tableName, obj) {
   if (tableName === Users) {
@@ -139,8 +139,8 @@ var foodPostIdAssignerByUserId = function (userId) {
           .then(function(userId){
             if (userId) {
               FoodPost.create({
-              title: obj.title, 
-              description: obj.description, 
+              title: obj.title,
+              description: obj.description,
               url: obj.url,
               userId: userId
             })
@@ -157,8 +157,8 @@ var foodPostIdAssignerByUserId = function (userId) {
             .then(function(userId){
               if (userId) {
                 Comments.create({
-                  text: obj.text, 
-                  foodPostId: obj.foodPostId, 
+                  text: obj.text,
+                  foodPostId: obj.foodPostId,
                   userId: userId
                 })
               }
@@ -174,7 +174,7 @@ var foodPostIdAssignerByUserId = function (userId) {
             .then(function(userId){
               tableName.create({
                 voteValue: obj.voteValue,
-                userId: userId, 
+                userId: userId,
                 foodPostId: obj.foodPostId
               })
             })
@@ -193,9 +193,9 @@ var findAllbyTableName = function(tableName, callback) {
       var resultArr = [];
       for (var i = 0; i < result.length; i++) {
         resultArr.push({
-          id: result[i].id, 
+          id: result[i].id,
           userName: result[i].userName,
-          createdAt: result[i].createdAt, 
+          createdAt: result[i].createdAt,
           updatedAt: result[i].updatedAt
         });
       }
@@ -212,7 +212,7 @@ var findAllbyTableName = function(tableName, callback) {
           resultArr.push({
             id: result[i].id,
             title: result[i].title,
-            description: result[i].description, 
+            description: result[i].description,
             url: result[i]. url,
             userId: result[i].userId,
             createdAt: result[i].createdAt,
@@ -238,7 +238,7 @@ var findAllbyTableName = function(tableName, callback) {
           updatedAt: result[i].updatedAt
         })
       }
-      callback(null, resultArr); 
+      callback(null, resultArr);
       })
       .catch(function(err) {
         callback(err, null);
@@ -299,7 +299,7 @@ var findAllCommentsByFoodPostId = function (foodPostId, callback) {
 //     .catch(function(err){
 //       console.log('following erros has occured while retrieving votes table information', err);
 //     });
-// };    
+// };
 
 // insertInTo(Votes, {
 
@@ -328,9 +328,3 @@ var findAllCommentsByFoodPostId = function (foodPostId, callback) {
 // });
 
 //get rid of foodPostId grabber function as foodpostId will be provided
-
-
-
-
-
-
