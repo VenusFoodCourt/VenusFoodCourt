@@ -38,18 +38,25 @@ var s3 = new AWS.S3({
 });
 
 var saveImage = function(fileObj, fileName, contentType) {
+  var saveImagePromise = new Promise((resolve, reject) => {
 
-  var fileKey = envBucketFolder + '/' + fileName;
-  s3.upload({
-    Key: fileKey,
-    Body: fileObj,
-    ContentType: contentType
-  }, function(err, data) {
-    if (err) {
-      return console.log('There was an errior uploading your image: ', err.message);
-    }
-    console.log('Successfully uploaded image!');
+    var fileKey = envBucketFolder + '/' + fileName;
+
+    s3.upload({
+      Key: fileKey,
+      Body: fileObj,
+      ContentType: contentType
+    }, function(err, data) {
+      if (err) {
+        return reject(err.message);
+      } else {
+        var fileUrl = `https://s3-us-west-1.amazonaws.com/${bucketName}/${fileKey}`;
+        return resolve(fileUrl);
+      }
+    });
+
   });
+  return saveImagePromise;
 };
 
 module.exports.saveImage = saveImage;
