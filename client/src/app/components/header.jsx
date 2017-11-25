@@ -34,8 +34,8 @@ class Header extends React.Component {
     var formData = new FormData();
 
     formData.append('username', 'Johnny');
-    formData.append('title', this.state.title);
-    formData.append('description', this.state.description);
+    formData.append('title', 'My food post');
+    formData.append('description', 'My food is so delicious');
     formData.append('imageFile', this.state.file);
     $.ajax({
       type: 'POST',
@@ -69,7 +69,6 @@ class Header extends React.Component {
 
   toggleModal () {
     this.setState({modalOpen: !this.state.modalOpen});
-    
   }
 
   render () {
