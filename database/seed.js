@@ -7,8 +7,9 @@ var {insertInTo, findAllbyTableName} = require('./helper.js');
 
 // create a users
 var createSampleUsers = () => {
+  insertInTo('Users', {userName: 'Muhammad'});
+  insertInTo('Users', {userName: 'Brendon'});
   insertInTo('Users', {userName: 'Johnny'});
-  insertInTo('Users', {userName: 'Michael'});
 }
 
 
