@@ -23,30 +23,62 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/foodPosts', function(req, res) {
   // endpoint to get foodposts from db to display on the front page
-  res.statusCode = 200;
 
-  let body = res.body;
-
-  // models.Foodpost(res.body)
-
-  //  response expects an array of foodPost objects from the database
+  db.findAllbyTableName('FoodPost', function(err, data){
+    if(err) {
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
 });
 
-app.get('/foodPost/:id', function(req, res) {
-  // endpoint to get single foodPost from db to display on the front page
-  res.statusCode = 200;
 
-});
-
-app.get('/comments', function(req, res) {
+app.get('/comments/:foodPostId', function(req, res) {
   // endpoint to retrieve comments for individual food post page
-  res.statusCode = 200;
+  var foodPostId = req.params.foodPostId;
+
+  db.findAllCommentsByFoodPostId(foodPostId, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
 });
 
+app.get('/voteCount/:foodPostId', function(req, res) {
+  var foodPostId = req.params.foodPostId;
+
+  db.totalVoteCountByFoodPostId(foodPostId, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
+});
+
+app.get('/voteStatus/:foodPostId/:username', function(req, res) {
+  var foodPostId = req.params.foodPostId;
+  var username = req.params.username;
+
+  db.votesStatusOfUser(username, foodPostId, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
+});
 
 app.post('/foodPost', function(req, res) {
   // endpoint to post an individual food post
-  console.log('inside /foodPost');
+
   var form = new formidable.IncomingForm();
   var files = {};
   var fields = {};
@@ -60,40 +92,73 @@ app.post('/foodPost', function(req, res) {
     })
     .on('file', function(field, file) {
       files[field] = file;
-
     })
     .on('end', function() {
       console.log('~> upload done');
-      console.log('files: ', files);
-      console.log('files.imageFile: ', files.imageFile);
-      console.log('files.imageFile.path: ', files.imageFile.path);
-      console.log('files.imageFile.filename: ', files.imageFile.filename);
-      console.log('files.imageFile.name: ', files.imageFile.name);
       var newFileName = path.basename(files.imageFile.path);
       var contentType = files.imageFile.type;
       fs.readFile(files.imageFile.path, function(err, imgFileData) {
-        // console.log(imgFileData);
-
-        s3Helper.saveImage(imgFileData, newFileName, contentType);
-        res.send('file uploaded');
+        s3Helper.saveImage(imgFileData, newFileName, contentType)
+        .then((fileUrl) => {
+          return db.insertInTo('FoodPost', {
+            userName: fields.username,
+            title: fields.title,
+            description: fields.description,
+            url: fileUrl
+          });
+        })
+        .then(() => {
+          res.send('file uploaded');
+        })
+        .catch((err) => {
+          res.send(err);
+        });
       });
 
-      // s3Helper.saveImage(files.imageFile);
+
     });
 
   form.parse(req);
-
-// needs a userID
-// needs a title
-// needs a description
-// needs an image
-
 });
 
 app.post('/comment', function(req, res) {
   // endpoint for a user to post an individual comment when user is on an individual food post
+  var form = new formidable.IncomingForm();
+  var fields = {};
+  form.encoding = 'utf-8';
+
+  form
+    .on('field', function(field, value) {
+      fields[field] = value;
+    })
+    .on('end', function() {
+      db.insertInTo('Comments', {
+        userName: fields.username,
+        foodPostId: fields.foodPostId,
+        text: fields.text
+      });
+    });
+
+  form.parse(req);
 });
 
 app.post('/vote', function(req, res) {
   // endpoint for a user to upvote a food post
+  var form = new formidable.IncomingForm();
+  var fields = {};
+  form.encoding = 'utf-8';
+
+  form
+    .on('field', function(field, value) {
+      fields[field] = value;
+    })
+    .on('end', function() {
+      db.insertInTo('Votes', {
+        userName: fields.username,
+        foodPostId: fields.foodPostId,
+        voteValue: fields.voteValue
+      });
+    });
+
+  form.parse(req);
 });

@@ -30,29 +30,29 @@ db.authenticate()
 
 var Users = db.define('users', {
   id: {
-    type: Sequelize.INTEGER, 
-    primaryKey: true, 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   userName: {
-    type: Sequelize.STRING, 
+    type: Sequelize.STRING,
     unique: true
   }
 });
 
 var FoodPost = db.define('foodPost', {
   id: {
-    type: Sequelize.INTEGER, 
-    primaryKey: true, 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   title: {
-    type: Sequelize.STRING, 
+    type: Sequelize.STRING,
     unique: true
-  }, 
+  },
   description : {
     type: Sequelize.TEXT
-  }, 
+  },
   url: {
     type: Sequelize.STRING
   }
@@ -62,10 +62,10 @@ FoodPost.belongsTo(Users);
 
 var Comments = db.define('comments', {
   id: {
-    type: Sequelize.INTEGER, 
-    primaryKey: true, 
+    type: Sequelize.INTEGER,
+    primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   text: {
     type: Sequelize.STRING(800),
     unique: true
@@ -79,7 +79,7 @@ var Votes = db.define('votes', {
     type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true
-  }, 
+  },
   voteValue: {
     type: Sequelize.INTEGER
   }
@@ -128,8 +128,8 @@ if (tableName === 'Users') {
         .then(function(userId){
           if (userId) {
             FoodPost.create({
-            title: obj.title, 
-            description: obj.description, 
+            title: obj.title,
+            description: obj.description,
             url: obj.url,
             userId: userId
           })
@@ -146,8 +146,8 @@ if (tableName === 'Users') {
           .then(function(userId){
             if (userId) {
               Comments.create({
-                text: obj.text, 
-                foodPostId: obj.foodPostId, 
+                text: obj.text,
+                foodPostId: obj.foodPostId,
                 userId: userId
               })
             }
@@ -163,25 +163,25 @@ if (tableName === 'Users') {
           .then(function(userId) {
           Votes.findOne({
             where: {
-              userId: userId, 
+              userId: userId,
               foodPostId: obj.foodPostId
             }
           })
           .then(function(result){
             if(result) {
               Votes.update(
-                {voteValue: obj.voteValue}, 
+                {voteValue: obj.voteValue},
                 {where: {
-                  userId: userId, 
+                  userId: userId,
                   foodPostId: obj.foodPostId
                 }}
               )
             } else {
               Votes.create({
                 voteValue: obj.voteValue,
-                userId: userId, 
+                userId: userId,
                 foodPostId: obj.foodPostId
-              })  
+              })
             }
           })
           })
@@ -199,9 +199,9 @@ var findAllbyTableName = function(tableName, callback) {
       var resultArr = [];
       for (var i = 0; i < result.length; i++) {
         resultArr.push({
-          id: result[i].id, 
+          id: result[i].id,
           userName: result[i].userName,
-          createdAt: result[i].createdAt, 
+          createdAt: result[i].createdAt,
           updatedAt: result[i].updatedAt
         });
       }
@@ -218,7 +218,7 @@ var findAllbyTableName = function(tableName, callback) {
           resultArr.push({
             id: result[i].id,
             title: result[i].title,
-            description: result[i].description, 
+            description: result[i].description,
             url: result[i]. url,
             userId: result[i].userId,
             createdAt: result[i].createdAt,
@@ -244,7 +244,7 @@ var findAllbyTableName = function(tableName, callback) {
           updatedAt: result[i].updatedAt
         })
       }
-      callback(null, resultArr); 
+      callback(null, resultArr);
       })
       .catch(function(err) {
         callback(err, null);
@@ -255,7 +255,7 @@ var findAllbyTableName = function(tableName, callback) {
       .then(function (result) {
         for (var i = 0; i < result.length; i++) {
           resultArr.push({
-            id: result[i].id, 
+            id: result[i].id,
             voteValue: result[i].voteValue,
             createdAt: result[i].createdAt,
             updatedAt: result[i].updatedAt
@@ -279,11 +279,11 @@ var findAllCommentsByFoodPostId = function (foodPostId, callback) {
   .then(function(result) {
     for (var i = 0; i < result.length; i++) {
       resultArr.push({
-        id: result[i].id, 
-        text: result[i].text, 
-        userId: result[i].userId, 
-        foodPostId: result[i].foodPostId, 
-        createdAt: result[i].createdAt, 
+        id: result[i].id,
+        text: result[i].text,
+        userId: result[i].userId,
+        foodPostId: result[i].foodPostId,
+        createdAt: result[i].createdAt,
         updatedAt: result[i].updatedAt
       });
     }
@@ -307,8 +307,8 @@ var votesStatusOfUser = function (userName, foodPostId, callback) {
       .then(function(result){
         for (var i  = 0; i < result.length; i++) {
           resultArr.push({
-            id: result[i].id, 
-            userName: userName, 
+            id: result[i].id,
+            userName: userName,
             voteValue: result[i].voteValue,
             createdAt: result[i].createdAt,
             updatedAt: result[i].updatedAt
@@ -320,7 +320,8 @@ var votesStatusOfUser = function (userName, foodPostId, callback) {
     .catch(function(err){
       callback(err, null);
     })
-};   
+};
+
 
 var totalVoteCountByFoodPostId = function(foodPostId, callback) {
   var totalVotes = 0;
@@ -341,17 +342,17 @@ var totalVoteCountByFoodPostId = function(foodPostId, callback) {
 };
 
 
-module.exports.insertInTo = insertInTo; 
-module.exports.findAllbyTableName = findAllbyTableName; 
+module.exports.insertInTo = insertInTo;
+module.exports.findAllbyTableName = findAllbyTableName;
 module.exports.findAllCommentsByFoodPostId = findAllCommentsByFoodPostId;
 module.exports.votesStatusOfUser= votesStatusOfUser;
 module.exports.totalVoteCountByFoodPostId = totalVoteCountByFoodPostId;
 
 //insertInto --> takes two parameters (1)tableName (2) object containing key-value pair of userName
-//findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters 
+//findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters
 //findAllCommentsByFoodPostId --> takes two parameters (1)specific foodPostId (2) callback function with error and data as its parameters
-//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters 
-//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters 
+//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters
+//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters
 
 //****************** example of inserting data into 'Users' table *****************************//
 //
