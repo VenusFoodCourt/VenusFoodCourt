@@ -32,8 +32,6 @@ app.get('/foodPosts', function(req, res) {
     res.send(data);
   });
 
-  // models.Foodpost(res.body)
-
   //  response expects an array of foodPost objects from the database
 });
 
