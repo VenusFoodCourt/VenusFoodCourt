@@ -127,32 +127,43 @@ app.post('/foodPost', function(req, res) {
 
 app.post('/comment', function(req, res) {
   // endpoint for a user to post an individual comment when user is on an individual food post
+  var form = new formidable.IncomingForm();
+  var fields = {};
+  form.encoding = 'utf-8';
+
+  form
+    .on('field', function(field, value) {
+      fields[field] = value;
+    })
+    .on('end', function() {
+      db.insertInTo('Comments', {
+        userName: fields.username,
+        foodPostId: fields.foodPostId,
+        text: fields.text
+      });
+    });
+
+  form.parse(req);
+
 });
 
 app.post('/vote', function(req, res) {
   // endpoint for a user to upvote a food post
-});
+  var form = new formidable.IncomingForm();
+  var fields = {};
+  form.encoding = 'utf-8';
 
-// ill pass foodPostID to comments
-//
-// vote count: /voteCount
-//
-// ill pass foodPostID to voteCount
-//
-// vote status: /voteStatus
-//
-// ill pass foodPostID and userName to /voteStatus
-//
-// post sending in foodPost object
-//
-// post to comments with {username, foodPostID, text}
-//
-// post to votes with {username, foodPostID, voteValue}
-//
-// get to foodPosts returning all food posts
-//
-// get to comments returning all comments based on passed in foodPostID
-//
-// get to voteCount returning sum of votecounts from database function based on passed in foodPostID
-//
-// get to voteStatus based on userName and foodPostID
+  form
+    .on('field', function(field, value) {
+      fields[field] = value;
+    })
+    .on('end', function() {
+      db.insertInTo('Votes', {
+        userName: fields.username,
+        foodPostId: fields.foodPostId,
+        voteValue: fields.voteValue
+      });
+    });
+
+  form.parse(req);
+});
