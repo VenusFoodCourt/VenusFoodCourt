@@ -36,3 +36,5 @@ dist/
 node_modules/
 bower_components/
 config/AWS.js
+
+client/src/public/bundle.js
