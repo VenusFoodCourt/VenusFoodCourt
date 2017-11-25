@@ -35,15 +35,24 @@ app.get('/foodPosts', function(req, res) {
   //  response expects an array of foodPost objects from the database
 });
 
-app.get('/foodPost/:id', function(req, res) {
+app.get('/foodPost', function(req, res) {
   // endpoint to get single foodPost from db to display on the front page
   res.statusCode = 200;
 
 });
 
-app.get('/comments', function(req, res) {
+app.get('/comments/:foodPostId', function(req, res) {
   // endpoint to retrieve comments for individual food post page
   res.statusCode = 200;
+  var foodPostId = req.params.foodPostId;
+  console.log('foodPostId', foodPostId);
+  db.findAllCommentsByFoodPostId(foodPostId, function(err, data) {
+    if (err) {
+      res.send('Error in retrieving comments');
+    } else {
+      res.send(data);
+    }
+  });  
 });
 
 
@@ -92,10 +101,6 @@ app.post('/foodPost', function(req, res) {
 
   form.parse(req);
 
-// needs a userID
-// needs a title
-// needs a description
-// needs an image
 
 });
 
@@ -106,3 +111,27 @@ app.post('/comment', function(req, res) {
 app.post('/vote', function(req, res) {
   // endpoint for a user to upvote a food post
 });
+
+// ill pass foodPostID to comments
+//
+// vote count: /voteCount
+//
+// ill pass foodPostID to voteCount
+//
+// vote status: /voteStatus
+//
+// ill pass foodPostID and userName to /voteStatus
+//
+// post sending in foodPost object
+//
+// post to comments with {username, foodPostID, text}
+//
+// post to votes with {username, foodPostID, voteValue}
+//
+// get to foodPosts returning all food posts
+//
+// get to comments returning all comments based on passed in foodPostID
+//
+// get to voteCount returning sum of votecounts from database function based on passed in foodPostID
+//
+// get to voteStatus based on userName and foodPostID
