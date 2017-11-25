@@ -160,12 +160,30 @@ if (tableName === 'Users') {
     db.sync()
       .then(function(){
         return userIdAssignerByGivenUsername(obj.userName)
-          .then(function(userId){
-            Votes.create({
-              voteValue: obj.voteValue,
+          .then(function(userId) {
+          Votes.findOne({
+            where: {
               userId: userId,
               foodPostId: obj.foodPostId
-            })
+            }
+          })
+          .then(function(result){
+            if(result) {
+              Votes.update(
+                {voteValue: obj.voteValue},
+                {where: {
+                  userId: userId,
+                  foodPostId: obj.foodPostId
+                }}
+              )
+            } else {
+              Votes.create({
+                voteValue: obj.voteValue,
+                userId: userId,
+                foodPostId: obj.foodPostId
+              })
+            }
+          })
           })
       })
       .catch(function(err) {
@@ -276,13 +294,14 @@ var findAllCommentsByFoodPostId = function (foodPostId, callback) {
   });
 }
 
-var findAllVotesByUserName = function (userName, callback) {
+var votesStatusOfUser = function (userName, foodPostId, callback) {
   var resultArr = [];
   userIdAssignerByGivenUsername(userName)
     .then(function(userId){
       Votes.findAll({
         where: {
-          userId: userId
+          userId: userId,
+          foodPostId: foodPostId
         }
       })
       .then(function(result){
@@ -303,15 +322,37 @@ var findAllVotesByUserName = function (userName, callback) {
     })
 };
 
+
+var totalVoteCountByFoodPostId = function(foodPostId, callback) {
+  var totalVotes = 0;
+  Votes.findAll({
+    where: {
+      foodPostId: foodPostId
+    }
+  })
+  .then(function(result) {
+    for (var i = 0; i < result.length; i++) {
+      totalVotes += result[i].voteValue;
+    }
+    callback(null, totalVotes);
+  })
+  .catch(function(err) {
+    callback(err, null);
+  });
+};
+
+
 module.exports.insertInTo = insertInTo;
 module.exports.findAllbyTableName = findAllbyTableName;
 module.exports.findAllCommentsByFoodPostId = findAllCommentsByFoodPostId;
-module.exports.findAllVotesByUserName= findAllVotesByUserName;
+module.exports.votesStatusOfUser= votesStatusOfUser;
+module.exports.totalVoteCountByFoodPostId = totalVoteCountByFoodPostId;
 
 //insertInto --> takes two parameters (1)tableName (2) object containing key-value pair of userName
 //findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters
 //findAllCommentsByFoodPostId --> takes two parameters (1)specific foodPostId (2) callback function with error and data as its parameters
-//findAllVotesByUserName --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters
+//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters
+//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters
 
 //****************** example of inserting data into 'Users' table *****************************//
 //
@@ -342,7 +383,7 @@ module.exports.findAllVotesByUserName= findAllVotesByUserName;
 //while inserting data into 'Votes' table, user has to provide {userName: '....', voteValue:'...', foodPostId:'...'}
 // insertInTo('Votes', {userName:'Johnny Chen', voteValue: -1, foodPostId: 2});
 // insertInTo('Votes', {userName:'Muhammad Rashid', voteValue: 0, foodPostId: 3});
-// insertInTo('Votes', {userName:'Brendon Verch', voteValue: 1, foodPostId: 1});
+// insertInTo('Votes', {userName:'Brendon Verch', voteValue: -1, foodPostId: 1});
 //---------------------------------------------------------------------------------------------------//
 
 //********************* example of grabing all the data from specific table *************************//
@@ -365,9 +406,8 @@ module.exports.findAllVotesByUserName= findAllVotesByUserName;
 // })
 //__________________________________________________________________________________________________________________//
 
-
 //********************* example of grabing all the data from 'votes' table by specific user name *********************//
-// findAllVotesByUserName('Muhammad Rashid', function(err, data) {
+// votesStatusOfUser('Muhammad Rashid', function(err, data) {
 //   if (err) {
 //     console.log('following err has occured', err);
 //   } else {
@@ -375,3 +415,13 @@ module.exports.findAllVotesByUserName= findAllVotesByUserName;
 //   }
 // })
 //--------------------------------------------------------------------------------------------------------------------//
+
+//********************** example of grabing total votes by specific FoodPostId ********************************//
+// totalVoteCountByFoodPostId(1, function(err, data) {
+//   if (err) {
+//     console.log('this erros has occured', err);
+//   } else {
+//     console.log('this is data', data);
+//   }
+// })
+//__________________________________________________________________________________________________________________//
