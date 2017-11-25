@@ -27,12 +27,11 @@ app.get('/foodPosts', function(req, res) {
   db.findAllbyTableName('FoodPost', function(err, data){
     if(err) {
       res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
     }
-    res.statusCode = 200;
-    res.send(data);
   });
-
-  //  response expects an array of foodPost objects from the database
 });
 
 
@@ -79,7 +78,7 @@ app.get('/voteStatus/:foodPostId/:username', function(req, res) {
 
 app.post('/foodPost', function(req, res) {
   // endpoint to post an individual food post
-  console.log('inside /foodPost');
+
   var form = new formidable.IncomingForm();
   var files = {};
   var fields = {};
@@ -96,7 +95,6 @@ app.post('/foodPost', function(req, res) {
     })
     .on('end', function() {
       console.log('~> upload done');
-      console.log('files: ', files);
       var newFileName = path.basename(files.imageFile.path);
       var contentType = files.imageFile.type;
       fs.readFile(files.imageFile.path, function(err, imgFileData) {
@@ -121,8 +119,6 @@ app.post('/foodPost', function(req, res) {
     });
 
   form.parse(req);
-
-
 });
 
 app.post('/comment', function(req, res) {
@@ -144,7 +140,6 @@ app.post('/comment', function(req, res) {
     });
 
   form.parse(req);
-
 });
 
 app.post('/vote', function(req, res) {
