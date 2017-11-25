@@ -23,38 +23,59 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/foodPosts', function(req, res) {
   // endpoint to get foodposts from db to display on the front page
-  res.statusCode = 200;
 
   db.findAllbyTableName('FoodPost', function(err, data){
     if(err) {
       res.send(err);
     }
+    res.statusCode = 200;
     res.send(data);
   });
 
   //  response expects an array of foodPost objects from the database
 });
 
-app.get('/foodPost', function(req, res) {
-  // endpoint to get single foodPost from db to display on the front page
-  res.statusCode = 200;
-
-});
 
 app.get('/comments/:foodPostId', function(req, res) {
   // endpoint to retrieve comments for individual food post page
-  res.statusCode = 200;
   var foodPostId = req.params.foodPostId;
-  console.log('foodPostId', foodPostId);
+
   db.findAllCommentsByFoodPostId(foodPostId, function(err, data) {
     if (err) {
-      res.send('Error in retrieving comments');
+      res.send(err);
     } else {
+      res.statusCode = 200;
       res.send(data);
     }
-  });  
+  });
 });
 
+app.get('/voteCount/:foodPostId', function(req, res) {
+  var foodPostId = req.params.foodPostId;
+
+  db.totalVoteCountByFoodPostId(foodPostId, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
+});
+
+app.get('/voteStatus/:foodPostId/:username', function(req, res) {
+  var foodPostId = req.params.foodPostId;
+  var username = req.params.username;
+
+  db.votesStatusOfUser(username, foodPostId, function(err, data) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
+});
 
 app.post('/foodPost', function(req, res) {
   // endpoint to post an individual food post
