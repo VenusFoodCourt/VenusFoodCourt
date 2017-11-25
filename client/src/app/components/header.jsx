@@ -69,6 +69,7 @@ class Header extends React.Component {
 
   toggleModal () {
     this.setState({modalOpen: !this.state.modalOpen});
+    
   }
 
   render () {
