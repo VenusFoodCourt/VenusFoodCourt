@@ -136,10 +136,11 @@ app.post('/comment', function(req, res) {
         userName: fields.username,
         foodPostId: fields.foodPostId,
         text: fields.text
+      }, () => {
+        res.sendStatus(201);
       });
     });
 
-  res.sendStatus(201);
   form.parse(req);
 });
 
@@ -158,9 +159,10 @@ app.post('/vote', function(req, res) {
         userName: fields.username,
         foodPostId: fields.foodPostId,
         voteValue: fields.voteValue
+      }, () => {
+        res.sendStatus(201);
       });
     });
 
-  res.sendStatus(201);
   form.parse(req);
 });
