@@ -4,14 +4,32 @@ import Header from './components/header.jsx';
 import FoodPostList from './components/foodPostList.jsx';
 import SingleFoodItem from './components/singleFoodItem.jsx';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
+import $ from 'jquery';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       currUser: 'Brendon Verch',
-      foodPosts: [{id: 234, title: 'DummyTitle1', description: 'This is a dummy description. Should maybe have a limit on the number of characters allowed.', url: 'http://placecorgi.com/260/180', username: 'Dummyuser'}, {id: 123, title: 'DummyTitle2', description: 'This is a dummy description. Should maybe have a limit on the number of characters allowed.', url: 'http://placecorgi.com/260/180', username: 'Dummyuser'}]
+      foodPosts: []
     }
+    this.getFoodPosts = this.getFoodPosts.bind(this);
+    this.getFoodPosts();
+  }
+
+  getFoodPosts() {
+    $.ajax({
+      type: 'GET',
+      url: '/foodPosts',
+      processData: false,
+      contentType: false,
+      context: this
+    }).then((msg) => {
+      console.log('Food post GETTED succesfully: response msg: ', msg);
+      this.setState({foodPosts: msg});
+    }).catch((error) => {
+      console.error(error);
+    });
   }
 
 
