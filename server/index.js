@@ -196,15 +196,23 @@ app.post('/signup', function(req, res) {
     .on('end', function() {
       // check if username exists
       // if user name exists, respond with a message stating it exists
-      if (true) {
-        res.send('User already exists');
-      } else {
-      // if user name doens't exist, create a new user
-        db.insertInTo('User', {
-          userName: fields.username,
-          password: fields.password
-        });
-      }
+      db.isValidUser(fields.username)
+      .then((result) => {
+        if (result === true) {
+          res.send('User already exists');
+        } else {
+          db.insertInTo('User', {
+            userName: fields.username,
+            password: fields.password
+          }, function(err, msg){
+            if (err) {
+              throw err;
+            } else {
+              res.send(msg);
+            }
+          });
+        }
+      });
     });
 
 });
