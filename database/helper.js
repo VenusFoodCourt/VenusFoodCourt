@@ -37,6 +37,9 @@ var Users = db.define('users', {
   userName: {
     type: Sequelize.STRING,
     unique: true
+  },
+  password: {
+    type: Sequelize.STRING
   }
 });
 
@@ -47,9 +50,8 @@ var FoodPost = db.define('foodPost', {
     autoIncrement: true
   },
   title: {
-    type: Sequelize.STRING,
-    unique: true
-  },
+    type: Sequelize.STRING
+  }, 
   description : {
     type: Sequelize.TEXT
   },
@@ -108,18 +110,35 @@ var userIdAssignerByGivenUsername = function (username) {
   })
 };
 
+var userNameFinderByGivenUserId = function (userId) {
+  return Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+  .then(function(result){
+    return result.userName;
+  })
+  .catch(function(err){
+    console.log('following error has occured while retrieving user name', err);
+  })
+};
+
+
 //********************************************************************************************//
 
-var insertInTo = function (tableName, obj) {
+var insertInTo = function (tableName, obj, callback) {
 if (tableName === 'Users') {
   db.sync()
     .then(function () {
       Users.create({
-        userName: obj.userName
+        userName: obj.userName, 
+        password: obj.password
       })
+      callback(null, 'successfully inserted');
     })
     .catch(function(err){
-      console.log('following error has occured while entering data in users table', err);
+      callback(err, null);
     });
 } else if (tableName === 'FoodPost') {
     db.sync()
@@ -133,11 +152,14 @@ if (tableName === 'Users') {
             url: obj.url,
             userId: userId
           })
+          .then(function(){
+            callback(null, 'successfully inserted');
+          })
         }
       })
     })
     .catch(function (err){
-      console.log('following error has occured while entering data in foodPost table', err);
+      callback(err, null);
     });
   } else if (tableName === 'Comments') {
     db.sync()
@@ -150,11 +172,14 @@ if (tableName === 'Users') {
                 foodPostId: obj.foodPostId,
                 userId: userId
               })
+              .then(function(){
+                callback(null, 'successfully inserted');
+              })
             }
           })
       })
     .catch(function(err) {
-      console.log('following eroor has occred while entering data in comments table', err);
+      callback(err, null);
     })
   } else if (tableName === 'Votes') {
     db.sync()
@@ -176,18 +201,24 @@ if (tableName === 'Users') {
                   foodPostId: obj.foodPostId
                 }}
               )
+              .then(function() {
+                callback(null, 'successfully updated');
+              })
             } else {
               Votes.create({
                 voteValue: obj.voteValue,
                 userId: userId,
                 foodPostId: obj.foodPostId
               })
+              .then(function() {
+                callback(null, 'successfully inserted');
+              })  
             }
           })
-          })
+        })
       })
       .catch(function(err) {
-        console.log('following error has occred while inserting into votes table', err);
+        callback(err, null);
       })
   }
 }
@@ -212,20 +243,32 @@ var findAllbyTableName = function(tableName, callback) {
     })
   } else if (tableName === 'FoodPost') {
     FoodPost.findAll()
-      .then(function(result){
-        var resultArr = [];
+      .then(function(result) {
+        var PromiseArray = [];
         for (var i = 0; i < result.length; i++) {
-          resultArr.push({
-            id: result[i].id,
-            title: result[i].title,
-            description: result[i].description,
-            url: result[i]. url,
-            userId: result[i].userId,
-            createdAt: result[i].createdAt,
-            updatedAt: result[i].updatedAt
-          });
+          var helperFunc = function(i) {
+            return userNameFinderByGivenUserId(result[i].userId)
+              .then(function(userName){
+               return {
+                  id: result[i].id,
+                  title: result[i].title,
+                  description: result[i].description, 
+                  url: result[i]. url,
+                  username: userName,
+                  createdAt: result[i].createdAt,
+                  updatedAt: result[i].updatedAt
+                };
+              })
+              .catch(function(err) {
+                console.log('following error has occured in the FoodPost', err);
+              })
+          };
+          PromiseArray.push(helperFunc(i));
         }
-        callback(null, resultArr);
+        Promise.all(PromiseArray)
+          .then(function(results){
+            callback(null, results);  
+          })
       })
       .catch(function(err){
         callback(err, null);
@@ -233,18 +276,30 @@ var findAllbyTableName = function(tableName, callback) {
   } else if (tableName === 'Comments') {
     Comments.findAll()
       .then(function(result) {
-      var resultArr = [];
+      var PromiseArray = [];
       for (var i = 0; i < result.length; i++) {
-        resultArr.push({
-          id: result[i].id,
-          text: result[i].text,
-          userId: result[i].userId,
-          foodPostId: result[i].foodPostId,
-          createdAt: result[i].createdAt,
-          updatedAt: result[i].updatedAt
-        })
+        var helperFunc = function(i) {
+          return userNameFinderByGivenUserId(result[i].userId)
+            .then(function(userName){
+            return {
+              id: result[i].id,
+              text: result[i].text,
+              username: userName,
+              foodPostId: result[i].foodPostId,
+              createdAt: result[i].createdAt,
+              updatedAt: result[i].updatedAt
+              }
+            })
+            .catch(function(err) {
+              console.log('following error has occured while retrieving data from Comments table', err);
+            })
+        };
+        PromiseArray.push(helperFunc(i));
       }
-      callback(null, resultArr);
+      Promise.all(PromiseArray)
+          .then(function(results){
+          callback(null, results);   
+        })
       })
       .catch(function(err) {
         callback(err, null);
@@ -341,49 +396,83 @@ var totalVoteCountByFoodPostId = function(foodPostId, callback) {
   });
 };
 
+var isValidUser = function(username) {
+  return Users.findOne({
+    where: {
+      userName: username
+    }
+  })
+  .then(function(result){
+    if(result.userName) {
+     return true;
+    }
+  })
+  .catch(function(err) {
+    return false;
+  })
+}
+
+var isValidPassword = function(username, password) {
+  return Users.findOne({
+    where: {
+      userName: username
+    }
+  })
+  .then(function(result){
+   return (result.password === password);
+  })
+  .catch(function(err) {
+    console.log('following error has occured while comparing store password with the password that is passed', err);
+  })
+}
 
 module.exports.insertInTo = insertInTo;
 module.exports.findAllbyTableName = findAllbyTableName;
 module.exports.findAllCommentsByFoodPostId = findAllCommentsByFoodPostId;
 module.exports.votesStatusOfUser= votesStatusOfUser;
 module.exports.totalVoteCountByFoodPostId = totalVoteCountByFoodPostId;
+module.exports.isValidUser = isValidUser;
+module.exports.isValidPassword = isValidPassword;
 
-//insertInto --> takes two parameters (1)tableName (2) object containing key-value pair of userName
-//findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters
+
+//insertInto --> takes three parameters (1)tableName (2) object containing key-value pair of userName (3) callback function that will report the status of insertion
+//findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters 
 //findAllCommentsByFoodPostId --> takes two parameters (1)specific foodPostId (2) callback function with error and data as its parameters
-//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters
-//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters
+//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters 
+//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters 
+//isValidUser --> takes a user name and returns a boolean (whether provided user name exists in the users table or not)
+//isValidPassword --> takes two paraments (1) username (2)password and it return a boolean (whether provided password matches the store password or not)
 
 //****************** example of inserting data into 'Users' table *****************************//
 //
 // while inserting data into 'Users' table, user has to provide {userName: '....'}
-// insertInTo('Users', {userName: 'Muhammad Rashid'});
-// insertInTo('Users', {userName: 'Brendon Verch'});
-// insertInTo('Users', {userName: 'Johnny Chen'});
+// insertInTo('Users', {userName: 'Muhammad Rashid', password: 'hello'}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('Users', {userName: 'Brendon Verch', password: 'world'}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('Users', {userName: 'Johnny Chen', password: 'test'}, function(err, data){if (err){return err;} else {return data;}});
 //--------------------------------------------------------------------------------------------//
 
 //****************** example of inserting data into 'FoodPost' table *************************************************//
 //
 //while inserting data into 'FoodPost' table, user has to provide {userName:'...', title:'...', description:'...', url:'...'}
-// insertInTo('FoodPost', {userName: 'Brendon Verch', title: 'test', description:'first test', url: 'www.google.com'});
-// insertInTo('FoodPost', {userName: 'Johnny Chen', title: 'test2', description:'second test', url: 'www.yahoo.com'});
-// insertInTo('FoodPost', {userName: 'Muhammad Rashid', title: 'test3', description:'third test', url: 'www.facebook.com'});
+// insertInTo('FoodPost', {userName: 'Brendon Verch', title: 'test', description:'first test', url: 'www.google.com'}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('FoodPost', {userName: 'Johnny Chen', title: 'test2', description:'second test', url: 'www.yahoo.com'}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('FoodPost', {userName: 'Muhammad Rashid', title: 'test3', description:'third test', url: 'www.facebook.com'}, function(err, data){if (err){return err;} else {return data;}});
 //-------------------------------------------------------------------------------------------------------------------------//
 
 //******************** example of inserting data into 'Comments' table **********************************************//
 //
 //while inserting data into 'Comments' table, user has to provide {userName: '....', foodPostId:'...', text:'...'}
-// insertInTo('Comments', {userName: 'Johnny Chen', foodPostId: 3, text: 'this food looks good'});
-// insertInTo('Comments', {userName: 'Muhammad Rashid', foodPostId: 1, text: 'awesome food'});
-// insertInTo('Comments', {userName: 'Brendon Verch', foodPostId: 2, text: 'delicious food'});
+// insertInTo('Comments', {userName: 'Johnny Chen', foodPostId: 3, text: 'this food looks good'}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('Comments', {userName: 'Muhammad Rashid', foodPostId: 1, text: 'awesome food'}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('Comments', {userName: 'Brendon Verch', foodPostId: 2, text: 'delicious food'}, function(err, data){if (err){return err;} else {return data;}});
 //-------------------------------------------------------------------------------------------------------------------//
 
 //************************** example of inserting data into 'Votes' table ***************************//
 //
 //while inserting data into 'Votes' table, user has to provide {userName: '....', voteValue:'...', foodPostId:'...'}
-// insertInTo('Votes', {userName:'Johnny Chen', voteValue: -1, foodPostId: 2});
-// insertInTo('Votes', {userName:'Muhammad Rashid', voteValue: 0, foodPostId: 3});
-// insertInTo('Votes', {userName:'Brendon Verch', voteValue: -1, foodPostId: 1});
+// insertInTo('Votes', {userName:'Johnny Chen', voteValue: -1, foodPostId: 2}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('Votes', {userName:'Muhammad Rashid', voteValue: 0, foodPostId: 3}, function(err, data){if (err){return err;} else {return data;}});
+// insertInTo('Votes', {userName:'Brendon Verch', voteValue: -1, foodPostId: 1}, function(err, data){if (err){return err;} else {return data;}});
 //---------------------------------------------------------------------------------------------------//
 
 //********************* example of grabing all the data from specific table *************************//
