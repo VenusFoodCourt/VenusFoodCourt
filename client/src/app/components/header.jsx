@@ -171,7 +171,7 @@ class Header extends React.Component {
               <h4 className="new-post-item">Username</h4>
               <input type="text" onChange={this.handleUsernameChange}></input>
               <h4 className="new-post-item">Password</h4>
-              <input type="text" onChange={this.handlePasswordChange} type="text"></input>
+              <input type="password" onChange={this.handlePasswordChange}></input>
               <br/>
               <button type="submit" className="loginsubmit" id="login">Login</button>
               <button onClick={this.toggleLoginModal}>Close</button>
@@ -186,7 +186,7 @@ class Header extends React.Component {
               <h4 className="new-post-item">Username</h4>
               <input type="text" onChange={this.handleUsernameChange}></input>
               <h4 className="new-post-item">Password</h4>
-              <input type="text" onChange={this.handlePasswordChange} type="text"></input>
+              <input type="password" onChange={this.handlePasswordChange}></input>
               <br/>
               <button type="submit" className="signupsubmit" id="signup">Signup</button>
               <button onClick={this.toggleSignupModal}>Close</button>
