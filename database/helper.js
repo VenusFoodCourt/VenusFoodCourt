@@ -1,8 +1,11 @@
 var Sequelize = require('sequelize');
 var mysql = require('mysql');
 
+
+let host = process.env.DATABASE_URL || 'localhost';
+
 var con = mysql.createConnection({
-  host: "localhost",
+  host: host,
   user: "root",
   password: ""
 });
