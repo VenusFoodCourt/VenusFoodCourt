@@ -12,7 +12,8 @@
   "scripts": {
     "server-dev": "nodemon ./server/index.js",
     "react-dev": "webpack -d --watch",
-    "seed-db": "node ./database/seed.js"
+    "seed-db": "node ./database/seed.js",
+    "postinstall": "webpack -p"
   },
   "dependencies": {
     "aws-sdk": "^2.153.0",
