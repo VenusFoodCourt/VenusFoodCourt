@@ -68,12 +68,11 @@ class Header extends React.Component {
 
   handleSignup(e) {
     e.preventDefault();
-
-
-
     var formData = new FormData();
     formData.append('username', this.state.username);
     formData.append('password', this.state.password);
+    console.log('username: ', this.state.username);
+    console.log('password: ', this.state.password);
     $.ajax({
       type: 'POST',
       url: '/signup',
@@ -81,22 +80,10 @@ class Header extends React.Component {
       processData: false,
       contentType: false
     }).then((msg) => {
-      console.log('signup success');
+      console.log(msg);
     }).catch((error) => {
       console.error('signup failed', error);
     });
-
-    // $.ajax({
-    //   type: 'POST',
-    //   url: '/foodPost',
-    //   data: formData,
-    //   processData: false,
-    //   contentType: false
-    // }).then((msg) => {
-    //   console.log('Food post POSTED succesfully: response msg: ', msg);
-    // }).catch((error) => {
-    //   console.error(error);
-    // });
   }
 
   handleImgUpload(e) {

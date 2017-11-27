@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({ secret: 'secret'}));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 
 app.get('/foodPosts', function(req, res) {
@@ -189,23 +189,28 @@ app.post('/vote', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
+  console.log('inside /signup');
   var form = new formidable.IncomingForm();
   var fields = {};
   form.encoding = 'utf-8';
 
+
   form
     .on('field', function(field, value) {
       fields[field] = value;
+      console.log(fields);
     })
     .on('end', function() {
       // check if username exists
       // if user name exists, respond with a message stating it exists
+      console.log('/signup .on end');
       db.isValidUser(fields.username)
       .then((result) => {
+        console.log('isValidUser result:', result);
         if (result === true) {
           res.send('User already exists');
         } else {
-          db.insertInTo('User', {
+          db.insertInTo('Users', {
             userName: fields.username,
             password: fields.password
           }, function(err, msg){
@@ -219,6 +224,7 @@ app.post('/signup', function(req, res) {
       });
     });
 
+  form.parse(req);
 });
 
 app.post('/login', passport.authenticate('local', {
