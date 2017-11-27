@@ -8,25 +8,95 @@ class Header extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: false,
+      submitModalOpen: false,
+      loginModalOpen: false,
       file: undefined,
       imgPath: '',
       title: '',
+      username: '',
+      password: '',
       description: ''
     };
-    this.toggleModal = this.toggleModal.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleSignup = this.handleSignup.bind(this);
+    this.toggleSubmitModal = this.toggleSubmitModal.bind(this);
+    this.toggleLoginModal = this.toggleLoginModal.bind(this);
+    this.toggleSignupModal = this.toggleSignupModal.bind(this);
     this.handleImgUpload = this.handleImgUpload.bind(this);
     this.handleImgChange = this.handleImgChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
   handleTitleChange(e) {
     this.setState({title: e.target.value});
   }
 
+  handleUsernameChange(e) {
+    this.setState({username: e.target.value});
+  }
+
+  handlePasswordChange(e) {
+    this.setState({password: e.target.value});
+  }
+
   handleDescriptionChange(e) {
     this.setState({description: e.target.value});
+  }
+
+  handleLogin(e) {
+    e.preventDefault();
+    // this.setState({username: '', password: ''})
+
+    var formData = new FormData();
+    formData.append('username', this.state.username);
+    formData.append('password', this.state.password);
+    $.ajax({
+      type: 'POST',
+      url: '/login',
+      data: formData,
+      processData: false,
+      contentType: false
+    }).then((msg) => {
+      console.log('login success');
+    }).catch((error) => {
+      console.error('login failed', error);
+    });
+  }
+
+  handleSignup(e) {
+    e.preventDefault();
+
+
+
+    var formData = new FormData();
+    formData.append('username', this.state.username);
+    formData.append('password', this.state.password);
+    $.ajax({
+      type: 'POST',
+      url: '/signup',
+      data: formData,
+      processData: false,
+      contentType: false
+    }).then((msg) => {
+      console.log('signup success');
+    }).catch((error) => {
+      console.error('signup failed', error);
+    });
+
+    // $.ajax({
+    //   type: 'POST',
+    //   url: '/foodPost',
+    //   data: formData,
+    //   processData: false,
+    //   contentType: false
+    // }).then((msg) => {
+    //   console.log('Food post POSTED succesfully: response msg: ', msg);
+    // }).catch((error) => {
+    //   console.error(error);
+    // });
   }
 
   handleImgUpload(e) {
@@ -34,8 +104,8 @@ class Header extends React.Component {
     var formData = new FormData();
 
     formData.append('username', 'Johnny');
-    formData.append('title', this.state.title);
-    formData.append('description', this.state.description);
+    formData.append('title', 'My food post');
+    formData.append('description', 'My food is so delicious');
     formData.append('imageFile', this.state.file);
     $.ajax({
       type: 'POST',
@@ -67,15 +137,23 @@ class Header extends React.Component {
     // this.setState({imgPath: './public' + e.target.value});
   }
 
-  toggleModal () {
-    this.setState({modalOpen: !this.state.modalOpen});
+  toggleSubmitModal () {
+    this.setState({submitModalOpen: !this.state.submitModalOpen});
+  }
+
+  toggleLoginModal () {
+    this.setState({loginModalOpen: !this.state.loginModalOpen});
+  }
+
+  toggleSignupModal () {
+    this.setState({signupModalOpen: !this.state.signupModalOpen});
   }
 
   render () {
 
     return (
       <div className="header">
-        <Modal className="modal" isOpen={this.state.modalOpen} contentLabel="Modal">
+        <Modal className="modal" isOpen={this.state.submitModalOpen} contentLabel="Modal">
           <h1>Submit New Food Post</h1>
           <form id="uploadimage" onSubmit={this.handleImgUpload} encType="multipart/form-data">
             <div id="new-post">
@@ -91,12 +169,43 @@ class Header extends React.Component {
             </div>
             <img id="previewing" src={this.state.imgPath}/>
           </form>
-          <button onClick={this.toggleModal}>Close</button>
+          <button onClick={this.toggleSubmitModal}>Close</button>
         </Modal>
+
+        <Modal className="modal" isOpen={this.state.loginModalOpen} contentLabel="Modal">
+          <h1>Login</h1>
+          <form id="uploadimage" onSubmit={this.handleLogin} encType="multipart/form-data">
+            <div id="new-post">
+              <h4 className="new-post-item">Title</h4>
+              <input type="text" onChange={this.handleUsernameChange}></input>
+              <h4 className="new-post-item">Description</h4>
+              <input type="text" onChange={this.handlePasswordChange} type="text"></input>
+              <br/>
+              <button type="submit" className="loginsubmit" id="login">Login</button>
+            </div>
+          </form>
+          <button onClick={this.toggleLoginModal}>Close</button>
+        </Modal>
+
+        <Modal className="modal" isOpen={this.state.signupModalOpen} contentLabel="Modal">
+          <h1>Signup</h1>
+          <form id="uploadimage" onSubmit={this.handleSignup} encType="multipart/form-data">
+            <div id="new-post">
+              <h4 className="new-post-item">Title</h4>
+              <input type="text" onChange={this.handleUsernameChange}></input>
+              <h4 className="new-post-item">Description</h4>
+              <input type="text" onChange={this.handlePasswordChange} type="text"></input>
+              <br/>
+              <button type="submit" className="signupsubmit" id="signup">Signup</button>
+            </div>
+          </form>
+          <button onClick={this.toggleSignupModal}>Close</button>
+        </Modal>
+
         <Link to="/" className="header-link">Home</Link>
-        <a className="header-link" onClick={this.toggleModal}>Submit FoodPost</a>
-        <a className="header-link">Login</a>
-        <a className="header-link">Signup</a>
+        <a className="header-link" onClick={this.toggleSubmitModal}>Submit FoodPost</a>
+        <a className="header-link" onClick={this.toggleLoginModal}>Login</a>
+        <a className="header-link" onClick={this.toggleSignupModal}>Signup</a>
       </div>
       );
   }

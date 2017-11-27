@@ -10,7 +10,7 @@ class FoodPostList extends React.Component {
     return (
       <div>
         <div>
-          {this.props.foodPosts.map((foodPost, index)=>{
+          {this.props.foodPosts.slice().reverse().map((foodPost, index)=>{
             return <FoodPostListEntry key={index} foodPost={foodPost}/>
           })}
         </div>
