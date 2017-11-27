@@ -72,7 +72,7 @@ class FoodPostListEntry extends React.Component {
 
   handleUpvote() {
     var formData = new FormData();
-    formData.append('username', 'Johnny');
+    formData.append('username', this.props.currUser);
     formData.append('foodPostId', this.props.foodPost.id);
     
 
@@ -104,7 +104,7 @@ class FoodPostListEntry extends React.Component {
 
   handleDownvote() {
     var formData = new FormData();
-    formData.append('username', 'Johnny');
+    formData.append('username', this.props.currUser);
     formData.append('foodPostId', this.props.foodPost.id);
     
     console.log('pressed downvote');

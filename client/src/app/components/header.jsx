@@ -10,6 +10,7 @@ class Header extends React.Component {
     this.state = {
       submitModalOpen: false,
       loginModalOpen: false,
+      signupModalOpen: false,
       file: undefined,
       imgPath: '//:0',
       title: '',
@@ -61,14 +62,18 @@ class Header extends React.Component {
       processData: false,
       contentType: false
     }).then((msg) => {
+      this.setState({loginModalOpen: false});
+      this.props.handleLogin(this.state.username);
       console.log('login success');
     }).catch((error) => {
       console.error('login failed', error);
+      alert('LOGIN FAILED');
     });
   }
 
   handleLogout(e) {
     console.log('handleLogout');
+    this.props.handleLogout();
   }
 
   handleSignup(e) {
@@ -85,9 +90,12 @@ class Header extends React.Component {
       processData: false,
       contentType: false
     }).then((msg) => {
+      this.props.handleLogin(this.state.username);
+      this.setState({signupModalOpen: false});
       console.log(msg);
     }).catch((error) => {
       console.error('signup failed', error);
+      alert('SIGNUP FAILED');
     });
   }
 
@@ -104,8 +112,11 @@ class Header extends React.Component {
       url: '/foodPost',
       data: formData,
       processData: false,
-      contentType: false
+      contentType: false,
+      context: this
     }).then((msg) => {
+      this.props.refresh();
+      this.setState({submitModalOpen: false});
       console.log('Food post POSTED succesfully: response msg: ', msg);
     }).catch((error) => {
       console.error(error);

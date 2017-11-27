@@ -255,7 +255,6 @@ var findAllbyTableName = function(tableName, callback) {
         var PromiseArray = [];
         for (var i = 0; i < result.length; i++) {
           var helperFunc = function(i) {
-                console.log('WWWWWWWWWWWWWWWWWWWWWWW', result[i].userId);
             return userNameFinderByGivenUserId(result[i].userId)
               .then(function(userName){
                return {
@@ -448,6 +447,7 @@ var isValidPassword = function(username, password) {
   })
 }
 
+module.exports.Users = Users;
 module.exports.insertInTo = insertInTo;
 module.exports.findAllbyTableName = findAllbyTableName;
 module.exports.findAllCommentsByFoodPostId = findAllCommentsByFoodPostId;

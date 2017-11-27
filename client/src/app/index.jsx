@@ -10,11 +10,22 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currUser: 'Brendon',
+      currUser: '',
       foodPosts: []
     }
+    this.refresh = this.refresh.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.getFoodPosts = this.getFoodPosts.bind(this);
     this.getFoodPosts();
+  }
+
+  handleLogout () {
+    this.setState({currUser: ''});
+  }
+
+  handleLogin (username) {
+    this.setState({currUser: username});
   }
 
   getFoodPosts() {
@@ -24,12 +35,16 @@ class App extends React.Component {
       processData: false,
       contentType: false,
       context: this
-    }).then((msg) => {
-      console.log('Food post GETTED succesfully: response msg: ', msg);
-      this.setState({foodPosts: msg});
+    }).then((foodPosts) => {
+      console.log('Food post GETTED succesfully: response msg: ', foodPosts);
+      this.setState({foodPosts: foodPosts});
     }).catch((error) => {
       console.error(error);
     });
+  }
+
+  refresh () {
+    this.getFoodPosts();
   }
 
 
@@ -38,13 +53,13 @@ class App extends React.Component {
       <div>
         <Link to="/" className="page-title"><h1 id="page-header">FOODCOURT</h1></Link>
         <img className="gavel" width="40" height="30" src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/dev/gavel.png" />
-        <Header currUser={this.state.currUser}/>
+        <Header handleLogout={this.handleLogout} handleLogin={this.handleLogin} refresh={this.refresh} currUser={this.state.currUser}/>
         <div>
           <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} currUser={this.state.currUser} /> )}/>
         </div>
         <div>
           {this.state.foodPosts.map((foodPost, index)=>{
-            return <Route key={index} exact path={"/post" + foodPost.id} render={(props) => ( <SingleFoodItem foodPost={foodPost} currUser={this.state.currUser}/> )}/>
+            return <Route key={foodPost.id} exact path={"/post" + foodPost.id} render={(props) => ( <SingleFoodItem foodPost={foodPost} currUser={this.state.currUser}/> )}/>
           })}
         </div>
       </div>
