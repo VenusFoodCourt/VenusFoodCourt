@@ -7,9 +7,9 @@ var {insertInTo, findAllbyTableName} = require('./helper.js');
 
 // create a users
 var createSampleUsers = () => {
-  insertInTo('Users', {userName: 'Muhammad'});
-  insertInTo('Users', {userName: 'Brendon'});
-  insertInTo('Users', {userName: 'Johnny'});
+  insertInTo('Users', {userName: 'Muhammad', password: 'password'}, function(err, msg){if (err) {throw err} console.log(msg)});
+  insertInTo('Users', {userName: 'Brendon', password: 'password'}, function(err, msg){if (err) {throw err} console.log(msg)});
+  insertInTo('Users', {userName: 'Johnny', password: 'password'}, function(err, msg){if (err) {throw err} console.log(msg)});
 }
 
 
@@ -22,7 +22,7 @@ var createSamplePost = () => {
     title: 'Yummy Food',
     description: 'Delicious food that I got today',
     url: 'https://s3-us-west-1.amazonaws.com/venusfoodcourt/dev/upload_3f4bfa3f2b0805152414dd1a118fad4d.png'
-  });
+  }, function(err, msg){if (err) {throw err} console.log(msg)});
 }
 
 createSampleUsers();
