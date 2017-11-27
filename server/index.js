@@ -6,6 +6,7 @@ var fs = require('fs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
+var cookieParser = require('cookie-parser');
 
 var s3Helper = require('../helpers/s3-helper.js');
 var db = require('../database/helper.js');
@@ -20,7 +21,7 @@ app.listen(port);
 // define passport strategy
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.findOne({username: username}, function(err, user) {
+    db.User.findOne({username: username}, function(err, user) {
       if (err) { return done(err); }
       if (!user) {
         return done(null, false, { message: 'Incorrect username' });
@@ -37,14 +38,18 @@ passport.use(new LocalStrategy(
 app.use(express.static(path.join(__dirname, '../client/src'))); // add static directory to serve files
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(session({ secret: 'secret'}));
+app.use(session({ secret: 'topsecret'}));
+app.use(cookieParser('topsecret'));
 app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.session());
 
 
 app.get('/foodPosts', function(req, res) {
   // endpoint to get foodposts from db to display on the front page
-
+  console.log('req: ', req);
+  console.log('req.session: ', req.session);
+  console.log('unsigned req.cookies: ', req.cookies);
+  console.log('signed req.signedCookies: ', req.signedCookies);
   db.findAllbyTableName('FoodPost', function(err, data){
     if(err) {
       res.send(err);
