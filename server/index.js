@@ -57,7 +57,7 @@ app.get('/voteCount/:foodPostId', function(req, res) {
       res.send(err);
     } else {
       res.statusCode = 200;
-      res.send(data);
+      res.send(data + '');
     }
   });
 });
@@ -136,6 +136,8 @@ app.post('/comment', function(req, res) {
         userName: fields.username,
         foodPostId: fields.foodPostId,
         text: fields.text
+      }, () => {
+        res.sendStatus(201);
       });
     });
 
@@ -157,6 +159,8 @@ app.post('/vote', function(req, res) {
         userName: fields.username,
         foodPostId: fields.foodPostId,
         voteValue: fields.voteValue
+      }, () => {
+        res.sendStatus(201);
       });
     });
 

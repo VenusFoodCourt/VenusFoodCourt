@@ -247,6 +247,7 @@ var findAllbyTableName = function(tableName, callback) {
         var PromiseArray = [];
         for (var i = 0; i < result.length; i++) {
           var helperFunc = function(i) {
+                console.log('WWWWWWWWWWWWWWWWWWWWWWW', result[i].userId);
             return userNameFinderByGivenUserId(result[i].userId)
               .then(function(userName){
                return {
@@ -332,21 +333,34 @@ var findAllCommentsByFoodPostId = function (foodPostId, callback) {
     }
   })
   .then(function(result) {
-    for (var i = 0; i < result.length; i++) {
-      resultArr.push({
-        id: result[i].id,
-        text: result[i].text,
-        userId: result[i].userId,
-        foodPostId: result[i].foodPostId,
-        createdAt: result[i].createdAt,
-        updatedAt: result[i].updatedAt
+      var PromiseArray = [];
+      for (var i = 0; i < result.length; i++) {
+        var helperFunc = function(i) {
+          return userNameFinderByGivenUserId(result[i].userId)
+            .then(function(userName){
+            return {
+              id: result[i].id,
+              text: result[i].text,
+              username: userName,
+              foodPostId: result[i].foodPostId,
+              createdAt: result[i].createdAt,
+              updatedAt: result[i].updatedAt
+              }
+            })
+            .catch(function(err) {
+              console.log('following error has occured while retrieving data from Comments table', err);
+            })
+        };
+        PromiseArray.push(helperFunc(i));
+      }
+      Promise.all(PromiseArray)
+        .then(function(results){
+          callback(null, results);   
+        })
+      })
+      .catch(function(err) {
+        callback(err, null);
       });
-    }
-    callback(null, resultArr);
-   })
-  .catch(function(err) {
-    callback(err, null);
-  });
 }
 
 var votesStatusOfUser = function (userName, foodPostId, callback) {
