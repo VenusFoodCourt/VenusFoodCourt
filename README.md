@@ -19,18 +19,29 @@
 
 ## Usage
 
-> Click a button to add a new photo. Click the photo/food post to go the food post review. Enter a comment in comment box to comment on individual food
+> Click submit foodpost link to add a new post. Click the photo/food post to go the food post review. Enter a comment in comment box to comment on the individual food post.
 > item/post.
 
 ## Requirements
 
-- React "^16.1.0"
-- Express "^4.16.2"
-- MySQL
-- Sequelize
-- JQuery
-- AWS S3
-- Passport
+
+- "aws-sdk": "^2.153.0",
+- "body-parser": "^1.18.2",
+- "cookie-parser": "^1.4.3",
+- "express": "^4.16.2",
+- "express-session": "^1.15.6",
+- "formidable": "^1.1.1",
+- "jquery": "^3.2.1",
+- "mysql": "^2.15.0",
+- "mysql2": "^1.5.1",
+- "passport": "^0.4.0",
+- "passport-local": "^1.0.0",
+- "react": "^16.1.1",
+- "react-dom": "^16.1.1",
+- "react-modal": "^3.1.2",
+- "react-router-dom": "^4.2.2",
+- "sequelize": "^4.22.6"
+
 
 
 ## Development
@@ -47,6 +58,7 @@ npm install
 Run the express server with this command:
 ```sh
 npm run server-dev
+npm run react-dev
 ```
 Go to your favorite browser and go to http://localhost:3000
 

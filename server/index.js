@@ -18,21 +18,6 @@ var app = express();
 let port = process.env.PORT || 3000;
 app.listen(port);
 
-// define passport strategy
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    db.User.findOne({username: username}, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username' });
-      }
-      if (!user.validPassword(username, password)) {
-        return done(null, false, { message: 'Incorrect password' });
-      }
-      return done(null, user);
-    });
-  }
-));
 
 // middleware
 app.use(express.static(path.join(__dirname, '../client/src'))); // add static directory to serve files
@@ -43,10 +28,31 @@ app.use(cookieParser('topsecret'));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// define passport strategy
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    console.log('WWWWWWWWWWWWWWWWWWWWWWW');
+    db.Users.findOne({username: username}, function(err, user) {
+      console.log('WWWWWWWWWWWWWWWWWWWWWWWWWW');
+      if (err) { 
+        console.log('WWWWWWWWWWWWWWWWWWWWWWWW ERRRRRR');
+        return done(err); }
+      if (!user) {
+        console.log('USER NOT FOUND');
+        return done(null, false, { message: 'Incorrect username' });
+      }
+      if (!user.password === password) {
+        console.log('PASSWORD NOT FOUND');
+        return done(null, false, { message: 'Incorrect password' });
+      }
+      console.log('USER VALIDATED');
+      return done(null, user);
+    });
+  }
+));
 
 app.get('/foodPosts', function(req, res) {
   // endpoint to get foodposts from db to display on the front page
-  console.log('req: ', req);
   console.log('req.session: ', req.session);
   console.log('unsigned req.cookies: ', req.cookies);
   console.log('signed req.signedCookies: ', req.signedCookies);
@@ -135,12 +141,10 @@ app.post('/foodPost', function(req, res) {
             if (err) {
               throw err;
             } else {
+              res.send('file uploaded');
               console.log(msg);
             }
           });
-        })
-        .then(() => {
-          res.send('file uploaded');
         })
         .catch((err) => {
           res.send(err);
@@ -238,9 +242,47 @@ app.post('/signup', function(req, res) {
   form.parse(req);
 });
 
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '',
-  failureRedirect: '',
-  failureFlash: 'Invalid username or password',
-  successFlash: 'Logged in! Welcome!'
-}));
+app.post('/login', function(req, res, next) {
+  console.log('inside /login');
+  var form = new formidable.IncomingForm();
+  var fields = {};
+  form.encoding = 'utf-8';
+
+
+  form
+    .on('field', function(field, value) {
+      fields[field] = value;
+      console.log(fields);
+    })
+    .on('end', function() {
+      // check if username exists
+      // if user name exists, respond with a message stating it exists
+
+    db.isValidUser(fields.username)
+      .then((userValid)=>{
+        if (userValid) {
+          db.isValidPassword(fields.username, fields.password)
+            .then((passwordValid)=>{
+              if (passwordValid) {
+                res.statusCode = 200;
+                res.send('validated');
+              } else {
+                res.statusCode = 401;
+                res.send('invalid password');
+              }
+            })
+        } else {
+          res.statusCode = 401;
+          res.send('invalid user');
+        }
+      })
+    });
+
+  form.parse(req);
+
+  // passport.authenticate('local', {
+  //   successRedirect: '/successLogin',
+  //   failureRedirect: '/'
+  // });
+
+});
