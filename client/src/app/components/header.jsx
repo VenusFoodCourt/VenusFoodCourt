@@ -176,9 +176,9 @@ class Header extends React.Component {
           <h1>Login</h1>
           <form id="uploadimage" onSubmit={this.handleLogin} encType="multipart/form-data">
             <div id="new-post">
-              <h4 className="new-post-item">Title</h4>
+              <h4 className="new-post-item">Username</h4>
               <input type="text" onChange={this.handleUsernameChange}></input>
-              <h4 className="new-post-item">Description</h4>
+              <h4 className="new-post-item">Password</h4>
               <input type="text" onChange={this.handlePasswordChange} type="text"></input>
               <br/>
               <button type="submit" className="loginsubmit" id="login">Login</button>
@@ -191,9 +191,9 @@ class Header extends React.Component {
           <h1>Signup</h1>
           <form id="uploadimage" onSubmit={this.handleSignup} encType="multipart/form-data">
             <div id="new-post">
-              <h4 className="new-post-item">Title</h4>
+              <h4 className="new-post-item">Username</h4>
               <input type="text" onChange={this.handleUsernameChange}></input>
-              <h4 className="new-post-item">Description</h4>
+              <h4 className="new-post-item">Password</h4>
               <input type="text" onChange={this.handlePasswordChange} type="text"></input>
               <br/>
               <button type="submit" className="signupsubmit" id="signup">Signup</button>
