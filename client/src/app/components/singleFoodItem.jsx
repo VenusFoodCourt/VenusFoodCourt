@@ -125,6 +125,7 @@ class SingleFoodItem extends React.Component {
       contentType: false,
       context: this
     }).then((msg) => {
+      this.getVotes();
       console.log('Votes POSTED succesfully: response msg: ', msg);
     }).catch((error) => {
       console.error(error);

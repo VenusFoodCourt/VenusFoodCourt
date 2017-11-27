@@ -37,13 +37,13 @@ class App extends React.Component {
     return (
       <div>
         <Link to="/" className="page-title"><h1>FOODCOURT</h1></Link>
-        <Header />
+        <Header currUser={this.state.currUser}/>
         <div>
-          <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} /> )}/>
+          <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} currUser={this.state.currUser} /> )}/>
         </div>
         <div>
           {this.state.foodPosts.map((foodPost, index)=>{
-            return <Route key={index} exact path={"/post" + foodPost.id} render={(props) => ( <SingleFoodItem foodPost={foodPost} /> )}/>
+            return <Route key={index} exact path={"/post" + foodPost.id} render={(props) => ( <SingleFoodItem foodPost={foodPost} currUser={this.state.currUser}/> )}/>
           })}
         </div>
       </div>

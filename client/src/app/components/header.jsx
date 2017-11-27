@@ -68,9 +68,23 @@ class Header extends React.Component {
 
   handleSignup(e) {
     e.preventDefault();
-    console.log('handleSignup');
-    console.log(this.state.username);
-    console.log(this.state.password);
+
+
+
+    var formData = new FormData();
+    formData.append('username', this.state.username);
+    formData.append('password', this.state.password);
+    $.ajax({
+      type: 'POST',
+      url: '/signup',
+      data: formData,
+      processData: false,
+      contentType: false
+    }).then((msg) => {
+      console.log('signup success');
+    }).catch((error) => {
+      console.error('signup failed', error);
+    });
 
     // $.ajax({
     //   type: 'POST',
