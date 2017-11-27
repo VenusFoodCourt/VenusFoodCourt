@@ -73,6 +73,7 @@ class Header extends React.Component {
 
   handleLogout(e) {
     console.log('handleLogout');
+    this.props.handleLogout();
   }
 
   handleSignup(e) {

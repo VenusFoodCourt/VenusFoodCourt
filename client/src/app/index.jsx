@@ -10,13 +10,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currUser: 'Brendon',
+      currUser: '',
       foodPosts: []
     }
     this.refresh = this.refresh.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.getFoodPosts = this.getFoodPosts.bind(this);
     this.getFoodPosts();
+  }
+
+  handleLogout () {
+    this.setState({currUser: ''});
   }
 
   handleLogin (username) {
@@ -48,7 +53,7 @@ class App extends React.Component {
       <div>
         <Link to="/" className="page-title"><h1 id="page-header">FOODCOURT</h1></Link>
         <img className="gavel" width="40" height="30" src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/dev/gavel.png" />
-        <Header handleLogin={this.handleLogin} refresh={this.refresh} currUser={this.state.currUser}/>
+        <Header handleLogout={this.handleLogout} handleLogin={this.handleLogin} refresh={this.refresh} currUser={this.state.currUser}/>
         <div>
           <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} currUser={this.state.currUser} /> )}/>
         </div>
