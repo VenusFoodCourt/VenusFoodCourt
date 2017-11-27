@@ -69,8 +69,7 @@ var Comments = db.define('comments', {
     autoIncrement: true
   },
   text: {
-    type: Sequelize.STRING(800),
-    unique: true
+    type: Sequelize.STRING(800)
   }
 });
 Comments.belongsTo(Users);

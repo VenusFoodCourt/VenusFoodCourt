@@ -11,7 +11,7 @@ class FoodPostList extends React.Component {
       <div>
         <div>
           {this.props.foodPosts.slice().reverse().map((foodPost, index)=>{
-            return <FoodPostListEntry key={index} foodPost={foodPost}/>
+            return <FoodPostListEntry currUser={this.props.currUser} key={index} foodPost={foodPost}/>
           })}
         </div>
       </div>
