@@ -34,7 +34,7 @@ passport.use(new LocalStrategy(
     console.log('WWWWWWWWWWWWWWWWWWWWWWW');
     db.Users.findOne({username: username}, function(err, user) {
       console.log('WWWWWWWWWWWWWWWWWWWWWWWWWW');
-      if (err) { 
+      if (err) {
         console.log('WWWWWWWWWWWWWWWWWWWWWWWW ERRRRRR');
         return done(err); }
       if (!user) {
@@ -141,6 +141,13 @@ app.post('/foodPost', function(req, res) {
             if (err) {
               throw err;
             } else {
+              fs.unlink(files.imageFile.path, (err) => {
+                if (err) {
+                    console.log("failed to delete local image:"+err);
+                } else {
+                    console.log('successfully deleted local image');
+                }
+              });
               res.send('file uploaded');
               console.log(msg);
             }
