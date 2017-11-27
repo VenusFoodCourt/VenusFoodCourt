@@ -2,11 +2,12 @@ var Sequelize = require('sequelize');
 var mysql = require('mysql');
 
 // production database_url
-// mysql://b5e7d52af507ee:e3755231@us-cdbr-iron-east-05.cleardb.net/heroku_b2b1080c441d92e?reconnect=true
+// mysql://m6s894smd8is8nwz:ifkl0n6rn0tyovnv@icopoghru9oezxh8.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/ts08gvcadfoh8mui
 
 if (process.env.DATABASE_URL) {
   var con = mysql.createConnection(process.env.DATABASE_URL);
   var db = new Sequelize(process.env.DATABASE_URL, {});
+  con.connect();
 } else {
   var con = mysql.createConnection({
     host: 'localhost',
@@ -15,17 +16,18 @@ if (process.env.DATABASE_URL) {
   });
   var db = new Sequelize('judgeFoody', 'root', '', {
     host: 'localhost',
-    dialect: 'mysql'});
+    dialect: 'mysql'
+  });
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    con.query("CREATE DATABASE IF NOT EXISTS judgeFoody", function (err, result) {
+      if (err) throw err;
+      console.log("Database created");
+    });
+  });
 }
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  con.query("CREATE DATABASE IF NOT EXISTS judgeFoody", function (err, result) {
-    if (err) throw err;
-    console.log("Database created");
-  });
-});
 
 db.authenticate()
   .then(() => {
