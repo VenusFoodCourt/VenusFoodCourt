@@ -1,5 +1,4 @@
-# FOODCOURT (while pronouncing, make sure to yell 'ALL CAPS' at the end)
-
+# FOODCOURT
 > App to display photos of food for other to judge and comment on.
 
 ## Team
