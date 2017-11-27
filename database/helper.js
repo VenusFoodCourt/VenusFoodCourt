@@ -51,7 +51,7 @@ var FoodPost = db.define('foodPost', {
   },
   title: {
     type: Sequelize.STRING
-  }, 
+  },
   description : {
     type: Sequelize.TEXT
   },
@@ -132,7 +132,7 @@ if (tableName === 'Users') {
   db.sync()
     .then(function () {
       Users.create({
-        userName: obj.userName, 
+        userName: obj.userName,
         password: obj.password
       })
       callback(null, 'successfully inserted');
@@ -212,7 +212,7 @@ if (tableName === 'Users') {
               })
               .then(function() {
                 callback(null, 'successfully inserted');
-              })  
+              })
             }
           })
         })
@@ -253,7 +253,7 @@ var findAllbyTableName = function(tableName, callback) {
                return {
                   id: result[i].id,
                   title: result[i].title,
-                  description: result[i].description, 
+                  description: result[i].description,
                   url: result[i]. url,
                   username: userName,
                   createdAt: result[i].createdAt,
@@ -268,7 +268,7 @@ var findAllbyTableName = function(tableName, callback) {
         }
         Promise.all(PromiseArray)
           .then(function(results){
-            callback(null, results);  
+            return callback(null, results);
           })
       })
       .catch(function(err){
@@ -299,7 +299,7 @@ var findAllbyTableName = function(tableName, callback) {
       }
       Promise.all(PromiseArray)
           .then(function(results){
-          callback(null, results);   
+          callback(null, results);
         })
       })
       .catch(function(err) {
@@ -355,7 +355,7 @@ var findAllCommentsByFoodPostId = function (foodPostId, callback) {
       }
       Promise.all(PromiseArray)
         .then(function(results){
-          callback(null, results);   
+          callback(null, results);
         })
       })
       .catch(function(err) {
@@ -367,7 +367,7 @@ var votesStatusOfUser = function (userName, foodPostId, callback) {
   var resultArr = [];
   userIdAssignerByGivenUsername(userName)
     .then(function(userId){
-      Votes.findAll({
+      return Votes.findAll({
         where: {
           userId: userId,
           foodPostId: foodPostId
@@ -450,10 +450,10 @@ module.exports.isValidPassword = isValidPassword;
 
 
 //insertInto --> takes three parameters (1)tableName (2) object containing key-value pair of userName (3) callback function that will report the status of insertion
-//findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters 
+//findAllbyTableName --> takes two parameters (1)table name (2)callback function with error and data as its parameters
 //findAllCommentsByFoodPostId --> takes two parameters (1)specific foodPostId (2) callback function with error and data as its parameters
-//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters 
-//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters 
+//votesStatusOfUser --> takes two parameters (1) specific userName (2) callback function with error and data as its parameters
+//totalVoteCountByFoodPostId --> takes two parameters (1) specific foodPostId (2) callback function with error and data as its parameters
 //isValidUser --> takes a user name and returns a boolean (whether provided user name exists in the users table or not)
 //isValidPassword --> takes two paraments (1) username (2)password and it return a boolean (whether provided password matches the store password or not)
 
