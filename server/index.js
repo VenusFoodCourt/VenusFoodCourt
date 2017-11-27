@@ -131,6 +131,12 @@ app.post('/foodPost', function(req, res) {
             title: fields.title,
             description: fields.description,
             url: fileUrl
+          }, (err, msg) => {
+            if (err) {
+              throw err;
+            } else {
+              console.log(msg);
+            }
           });
         })
         .then(() => {
