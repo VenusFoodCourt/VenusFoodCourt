@@ -1,15 +1,21 @@
 var Sequelize = require('sequelize');
 var mysql = require('mysql');
 
+// production database_url
+// mysql://b5e7d52af507ee:e3755231@us-cdbr-iron-east-05.cleardb.net/heroku_b2b1080c441d92e?reconnect=true
 
 if (process.env.DATABASE_URL) {
   var con = mysql.createConnection(process.env.DATABASE_URL);
+  var db = new Sequelize(process.env.DATABASE_URL, {});
 } else {
   var con = mysql.createConnection({
     host: 'localhost',
     user: "root",
     password: ""
   });
+  var db = new Sequelize('judgeFoody', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql'});
 }
 
 con.connect(function(err) {
@@ -20,10 +26,6 @@ con.connect(function(err) {
     console.log("Database created");
   });
 });
-
-var db = new Sequelize('judgeFoody', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql'});
 
 db.authenticate()
   .then(() => {
