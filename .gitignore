@@ -3,8 +3,6 @@
 # config folder with api keys
 config/*
 
-# temp folder
-temp/*
 
 ### node etc ###
 
