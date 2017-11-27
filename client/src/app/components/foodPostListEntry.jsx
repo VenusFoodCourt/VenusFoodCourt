@@ -137,9 +137,9 @@ class FoodPostListEntry extends React.Component {
   render () {
     return (
       <div className="flex">
-        {this.state.voteTotal}
         <div>
-          <img onClick={this.handleUpvote} className="votes" height="18" width="12" src={this.state.upvoteUrl} /> <br />
+          <img onClick={this.handleUpvote} className="votes" height="18" width="12" src={this.state.upvoteUrl} />
+          <div className="total-votes">{this.state.voteTotal}</div>
           <img onClick={this.handleDownvote} className="votes" height="18" width="12" src={this.state.downvoteUrl} />
         </div>
         <Link to={"/post" + this.props.foodPost.id}>

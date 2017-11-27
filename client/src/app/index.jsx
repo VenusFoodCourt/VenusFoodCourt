@@ -10,7 +10,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currUser: 'Brendon Verch',
+      currUser: 'Brendon',
       foodPosts: []
     }
     this.getFoodPosts = this.getFoodPosts.bind(this);
@@ -36,7 +36,8 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Link to="/" className="page-title"><h1>FOODCOURT</h1></Link>
+        <Link to="/" className="page-title"><h1 id="page-header">FOODCOURT</h1></Link>
+        <img className="gavel" width="40" height="30" src="https://s3-us-west-1.amazonaws.com/venusfoodcourt/dev/gavel.png" />
         <Header currUser={this.state.currUser}/>
         <div>
           <Route exact path="/" render={(props) => ( <FoodPostList foodPosts={this.state.foodPosts} currUser={this.state.currUser} /> )}/>

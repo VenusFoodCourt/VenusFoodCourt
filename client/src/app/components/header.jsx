@@ -11,13 +11,14 @@ class Header extends React.Component {
       submitModalOpen: false,
       loginModalOpen: false,
       file: undefined,
-      imgPath: '',
+      imgPath: '//:0',
       title: '',
       username: '',
       password: '',
       description: ''
     };
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.handleSignup = this.handleSignup.bind(this);
     this.toggleSubmitModal = this.toggleSubmitModal.bind(this);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
@@ -66,6 +67,10 @@ class Header extends React.Component {
     });
   }
 
+  handleLogout(e) {
+    console.log('handleLogout');
+  }
+
   handleSignup(e) {
     e.preventDefault();
     var formData = new FormData();
@@ -90,9 +95,9 @@ class Header extends React.Component {
     e.preventDefault();
     var formData = new FormData();
 
-    formData.append('username', 'Johnny');
-    formData.append('title', 'My food post');
-    formData.append('description', 'My food is so delicious');
+    formData.append('username', this.props.currUser);
+    formData.append('title', this.state.title);
+    formData.append('description', this.state.description);
     formData.append('imageFile', this.state.file);
     $.ajax({
       type: 'POST',
@@ -140,8 +145,8 @@ class Header extends React.Component {
 
     return (
       <div className="header">
-        <Modal className="modal" isOpen={this.state.submitModalOpen} contentLabel="Modal">
-          <h1>Submit New Food Post</h1>
+        <Modal className="modal-submit" isOpen={this.state.submitModalOpen} contentLabel="Modal">
+          <h1 className="modal-header">Submit New Food Post</h1>
           <form id="uploadimage" onSubmit={this.handleImgUpload} encType="multipart/form-data">
             <div id="new-post">
               <h4 className="new-post-item">Title</h4>
@@ -152,15 +157,15 @@ class Header extends React.Component {
                 <label>Select Your Image</label><br/>
                 <input type="file" name="image" id="file" onChange={this.handleImgChange} required />
                 <button type="submit" className="btn btn-primary" id="upload">Upload</button>
+                <button onClick={this.toggleSubmitModal}>Close</button>
               </div>
             </div>
             <img id="previewing" src={this.state.imgPath}/>
           </form>
-          <button onClick={this.toggleSubmitModal}>Close</button>
         </Modal>
 
-        <Modal className="modal" isOpen={this.state.loginModalOpen} contentLabel="Modal">
-          <h1>Login</h1>
+        <Modal className="modal-login" isOpen={this.state.loginModalOpen} contentLabel="Modal">
+          <h1 className="modal-header">Login</h1>
           <form id="uploadimage" onSubmit={this.handleLogin} encType="multipart/form-data">
             <div id="new-post">
               <h4 className="new-post-item">Username</h4>
@@ -169,13 +174,13 @@ class Header extends React.Component {
               <input type="text" onChange={this.handlePasswordChange} type="text"></input>
               <br/>
               <button type="submit" className="loginsubmit" id="login">Login</button>
+              <button onClick={this.toggleLoginModal}>Close</button>
             </div>
           </form>
-          <button onClick={this.toggleLoginModal}>Close</button>
         </Modal>
 
-        <Modal className="modal" isOpen={this.state.signupModalOpen} contentLabel="Modal">
-          <h1>Signup</h1>
+        <Modal className="modal-signup" isOpen={this.state.signupModalOpen} contentLabel="Modal">
+          <h1 className="modal-header">Signup</h1>
           <form id="uploadimage" onSubmit={this.handleSignup} encType="multipart/form-data">
             <div id="new-post">
               <h4 className="new-post-item">Username</h4>
@@ -184,15 +189,16 @@ class Header extends React.Component {
               <input type="text" onChange={this.handlePasswordChange} type="text"></input>
               <br/>
               <button type="submit" className="signupsubmit" id="signup">Signup</button>
+              <button onClick={this.toggleSignupModal}>Close</button>
             </div>
           </form>
-          <button onClick={this.toggleSignupModal}>Close</button>
         </Modal>
 
         <Link to="/" className="header-link">Home</Link>
         <a className="header-link" onClick={this.toggleSubmitModal}>Submit FoodPost</a>
         <a className="header-link" onClick={this.toggleLoginModal}>Login</a>
         <a className="header-link" onClick={this.toggleSignupModal}>Signup</a>
+        <span id="user-welcome">Welcome {this.props.currUser}!<a className="header-link" onClick={this.handleLogout}>Logout</a></span>
       </div>
       );
   }

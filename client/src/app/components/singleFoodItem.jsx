@@ -136,10 +136,10 @@ class SingleFoodItem extends React.Component {
   }
 
   onSubmit () {
-    var newComment = {username: 'Johnny', text: this.state.text};
+    var newComment = {username: this.props.currUser, text: this.state.text};
     var formData = new FormData();
 
-    formData.append('username', 'Johnny');
+    formData.append('username', this.props.currUser);
     formData.append('text', this.state.text);
     formData.append('foodPostId', this.props.foodPost.id);
     
@@ -176,25 +176,28 @@ class SingleFoodItem extends React.Component {
 
   render () {
     return (
-      <div className="post-header">
-        <div className="vote-container">
-          <img onClick={this.handleUpvote} className="votes" height="18" width="12" src={this.state.upvoteUrl} /> <br />
-          <img onClick={this.handleDownvote} className="votes" height="18" width="12" src={this.state.downvoteUrl} />
+      <div>
+        <div className="post-header">
+          <div className="vote-container">
+            <img onClick={this.handleUpvote} className="votes" height="18" width="12" src={this.state.upvoteUrl} />
+            <div className="total-votes">{this.state.voteTotal}</div>
+            <img onClick={this.handleDownvote} className="votes" height="18" width="12" src={this.state.downvoteUrl} />
+          </div>
+          <div className="flex-post">
+              <p className="post-title">{this.props.foodPost.title}</p>
+              <p className="username">{"Submitted by:" + this.props.foodPost.username}</p>
+            <img className="image-post" height="240" width="400" src={this.props.foodPost.url} />
+            <p className="description">{this.props.foodPost.description}</p>
+          </div>
         </div>
-        <div className="flex-post">
-          {this.state.voteTotal}
-            <p className="post-title">{this.props.foodPost.title}</p>
-            <p className="username">{"Submitted by:" + this.props.foodPost.username}</p>
-          <img className="image-post" height="240" width="400" src={this.props.foodPost.url} />
-          <p className="description">{this.props.foodPost.description}</p>
-          <div>
-          <textarea onChange={this.onChange} placeholder="New Comment" rows="4" cols="50"></textarea>
+        <div className="comments">
+          <textarea className="new-comment" onChange={this.onChange} placeholder="New Comment" rows="4" cols="50"></textarea>
           <br />
-          <button onClick={this.onSubmit}>Submit</button>
+          <button className="new-comment-button" onClick={this.onSubmit}>Submit</button>
           {this.state.comments.slice().reverse().map((comment, index) => {
             return <Comments key={index} comment={comment}/>
           })}
-          </div>
+          <br />
         </div>
       </div>
       );
